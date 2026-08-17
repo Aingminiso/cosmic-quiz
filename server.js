@@ -238,7 +238,8 @@ function comboMultiplier(streak) {
 }
 
 /**
- * Derive the room's current phase purely from elapsed wall-clock time.
+ * Derive the room's current phase purely from elapsed wall-clock time
+ * (plus any accumulated `timeSaved`, see below).
  * Returns one of:
  *   { phase:'lobby' }
  *   { phase:'question', qi, timeLeft }
@@ -248,7 +249,12 @@ function comboMultiplier(streak) {
 function getComputedPhase(room) {
   if (!room.started) return { phase: 'lobby' };
   const totalQ = room.questions.length;
-  const elapsedSec = (Date.now() - room.gameStartAt) / 1000;
+  // `timeSaved` (ms) is added to the real elapsed time whenever a question
+  // ends early because every player already answered — it permanently
+  // fast-forwards the rest of the schedule by that amount, with zero extra
+  // timers: the phase is still derived purely from a formula, just fed a
+  // slightly larger "elapsed" value.
+  const elapsedSec = (Date.now() - room.gameStartAt + (room.timeSaved || 0)) / 1000;
   const qi = Math.floor(elapsedSec / TOTAL_PER_Q);
   if (qi >= totalQ) return { phase: 'end' };
   const within = elapsedSec - qi * TOTAL_PER_Q;
@@ -256,6 +262,23 @@ function getComputedPhase(room) {
     return { phase: 'question', qi, timeLeft: QUESTION_TIME - within };
   }
   return { phase: 'reveal', qi, revealTimeLeft: TOTAL_PER_Q - within };
+}
+
+/**
+ * If every player in the room has already answered question `qi` and we
+ * haven't already fast-forwarded past it, skip the rest of the question
+ * timer by adding the remaining time to `room.timeSaved`. Idempotent per
+ * question (guarded by `room.autoAdvanced[qi]`), and a no-op if the room
+ * has already moved on from `qi` by the time this runs.
+ */
+function maybeAutoAdvance(room, qi) {
+  if (room.autoAdvanced[qi]) return;
+  const answeredCount = Object.keys(room.answers[qi] || {}).length;
+  if (answeredCount < room.players.length) return;
+  const computed = getComputedPhase(room);
+  if (computed.phase !== 'question' || computed.qi !== qi) return;
+  room.autoAdvanced[qi] = true;
+  room.timeSaved = (room.timeSaved || 0) + computed.timeLeft * 1000;
 }
 
 /**
@@ -346,6 +369,8 @@ app.post('/api/rooms', (req, res) => {
     gameStartAt: null,
     questions: [],
     answers: {},
+    timeSaved: 0,
+    autoAdvanced: {},
     createdAt: Date.now(),
   });
 
@@ -413,6 +438,8 @@ app.post('/api/rooms/:code/start', (req, res) => {
   const count = Math.min(MAX_QUESTIONS, BANK.length);
   room.questions = shuffle(BANK).slice(0, count).map(shuffleQuestionOptions);
   room.answers = {};
+  room.timeSaved = 0;
+  room.autoAdvanced = {};
   room.started = true;
   room.gameStartAt = Date.now();
 
@@ -435,6 +462,12 @@ app.post('/api/rooms/:code/answer', (req, res) => {
   const timeTaken = Math.min(QUESTION_TIME, Math.max(0, QUESTION_TIME - computed.timeLeft));
   recordAnswer(room, computed.qi, player, optionIndex, timeTaken);
 
+  // Make sure any bots are counted too (they resolve instantly once looked
+  // at), then check if that was the last answer needed to end the question
+  // early instead of waiting out the rest of the timer.
+  ensureQuestionResolved(room, computed.qi, false);
+  maybeAutoAdvance(room, computed.qi);
+
   res.json({ ok: true });
 });
 
@@ -445,7 +478,7 @@ app.get('/api/rooms/:code/state', (req, res) => {
   if (!player) return res.status(404).json({ error: 'PLAYER_NOT_FOUND' });
   player.lastSeen = Date.now();
 
-  const computed = getComputedPhase(room);
+  let computed = getComputedPhase(room);
 
   // ---- LOBBY ----
   if (computed.phase === 'lobby') {
@@ -462,6 +495,13 @@ app.get('/api/rooms/:code/state', (req, res) => {
     for (let i = 0; i < computed.qi; i++) ensureQuestionResolved(room, i, true); // finalize any past questions
     ensureQuestionResolved(room, computed.qi, false); // bots answer now, humans still pending
 
+    // If that resolved the last pending answer, skip the rest of the
+    // countdown and move straight to reveal instead of waiting it out.
+    maybeAutoAdvance(room, computed.qi);
+    computed = getComputedPhase(room);
+  }
+
+  if (computed.phase === 'question') {
     const q = room.questions[computed.qi];
     const answeredCount = Object.keys(room.answers[computed.qi] || {}).length;
 
@@ -495,6 +535,23 @@ app.get('/api/rooms/:code/state', (req, res) => {
       .slice(0, 5)
       .map(p => ({ id: p.id, name: p.name, avatar: p.avatar, score: p.score || 0 }));
 
+    // Who-picked-what for this question, so everyone can see (and roast)
+    // each other's answers, not just their own.
+    const roundAnswers = room.players.map(p => {
+      const a = room.answers[computed.qi][p.id];
+      const optionIndex = a ? a.optionIndex : -1;
+      return {
+        id: p.id,
+        name: p.name,
+        avatar: p.avatar,
+        isBot: !!p.isBot,
+        optionIndex,
+        optionText: optionIndex >= 0 ? q.options[optionIndex] : null,
+        correct: a ? !!a.correct : false,
+        gain: a ? a.gain : 0,
+      };
+    });
+
     return res.json({
       phase: 'reveal',
       roomCode: room.code,
@@ -509,6 +566,7 @@ app.get('/api/rooms/:code/state', (req, res) => {
         yourBreakdown: { base: mine.base, bonus: mine.bonus, mult: mine.mult, total: mine.gain },
         yourGain: mine.gain,
       },
+      roundAnswers,
       leaderboard,
     });
   }

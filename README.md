@@ -96,6 +96,27 @@ To change the port: `PORT=8080 npm start`.
 chance of getting it right (85% easy / 65% medium / 45% hard) after a random
 1.5–7.5s "thinking" delay, so a solo host can fully test/demo the game flow.
 
+## Who answered what
+
+On the reveal screen, everyone in the room sees a full breakdown of every
+player's pick for that question (correct picks first, so you can spot
+exactly who to roast) — not just your own answer. Bots are included and
+labeled 🤖; anyone who ran out the clock without answering shows up as
+"หมดเวลา" instead of a picked option.
+
+## Timing
+
+- Each question normally runs for `QUESTION_TIME` seconds, followed by
+  `REVEAL_TIME` seconds showing the answer and leaderboard.
+- If every player in the room (including bots) answers before the timer
+  runs out, the question ends immediately and reveal starts right away —
+  no need to sit through a countdown once everyone's already answered.
+  The reveal screen still gets its full `REVEAL_TIME` regardless. This
+  needs no extra timers: the server just permanently fast-forwards its
+  time-based phase formula by however many seconds were skipped
+  (`room.timeSaved` in `server.js`), so it stays driftless and stateless
+  across polls exactly like before.
+
 ## Randomization
 
 - Each match draws a fresh, fully shuffled random subset of the question

@@ -259,6 +259,32 @@ h1.logo{
 .mini-lb-row .sc{font-family:var(--font-mono);color:var(--gold);}
 .mini-lb-row.me{background:rgba(124,58,237,.15);border-radius:8px;}
 
+.round-answers{margin-top:20px;}
+.round-answers .section-label{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--text-2);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.ra-row{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;font-size:13px;
+  border-radius:10px;margin-bottom:6px;border:1px solid transparent;
+}
+.ra-row.ok{background:rgba(52,211,153,.10);border-color:rgba(52,211,153,.35);}
+.ra-row.bad{background:rgba(248,113,113,.10);border-color:rgba(248,113,113,.35);}
+.ra-row.timeout{background:rgba(139,147,176,.08);border-color:rgba(139,147,176,.25);}
+.ra-row.me{box-shadow:0 0 0 1px var(--cyan) inset;}
+.ra-row .av{font-size:18px;width:28px;height:28px;background:var(--void-3);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ra-row .nm{font-family:var(--font-display);font-weight:600;flex-shrink:0;max-width:34%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ra-row .pick{flex:1;font-family:var(--font-mono);font-size:12px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ra-row .pick b{color:var(--text-1);}
+.ra-row .pick-letter{
+  font-family:var(--font-mono);font-weight:700;font-size:11px;width:20px;height:20px;flex-shrink:0;
+  border-radius:6px;display:flex;align-items:center;justify-content:center;background:var(--void-3);
+}
+.ra-row.ok .pick-letter{background:var(--success);color:#04261a;}
+.ra-row.bad .pick-letter{background:var(--danger);color:#2a0808;}
+.ra-row .icon{flex-shrink:0;font-size:14px;}
+
 /* end game */
 .podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:28px 0 8px;}
 .pod-col{display:flex;flex-direction:column;align-items:center;gap:8px;}
@@ -426,6 +452,7 @@ h1.logo{
       </div>
       <div class="score-breakdown" id="score-breakdown"></div>
       <div class="total-score" id="total-score-line"></div>
+      <div class="round-answers" id="round-answers"></div>
       <div class="mini-lb" id="mini-lb"></div>
     </div>
     <div class="next-countdown" id="next-countdown"></div>
@@ -926,6 +953,33 @@ function paintReveal(data){
       <span class="sc">${p.score.toLocaleString()}</span>
     </div>
   `).join('');
+
+  // ---- who answered what ----
+  const letters = ['A','B','C','D'];
+  const ra = (data.roundAnswers || []).slice().sort((a,b)=>{
+    // correct answers first (for maximum bragging/roasting effect), then by name
+    if(a.correct !== b.correct) return a.correct ? -1 : 1;
+    return a.name.localeCompare(b.name, 'th');
+  });
+  document.getElementById('round-answers').innerHTML = `
+    <div class="section-label">🎯 ใครตอบอะไร</div>
+    ${ra.map(p=>{
+      const timedOut = p.optionIndex === -1;
+      const cls = timedOut ? 'timeout' : (p.correct ? 'ok' : 'bad');
+      const pickHtml = timedOut
+        ? '<span class="pick">⏱️ หมดเวลา ไม่ได้ตอบ</span>'
+        : `<span class="pick-letter">${letters[p.optionIndex]}</span><span class="pick"><b>${p.optionText}</b></span>`;
+      const icon = timedOut ? '⏱️' : (p.correct ? '✅' : '❌');
+      return `
+        <div class="ra-row ${cls} ${p.id===playerId?'me':''}">
+          <span class="av">${p.avatar||''}</span>
+          <span class="nm">${p.name}${p.isBot?' 🤖':''}</span>
+          ${pickHtml}
+          <span class="icon">${icon}</span>
+        </div>
+      `;
+    }).join('')}
+  `;
 }
 
 /* ---------- end game ---------- */
