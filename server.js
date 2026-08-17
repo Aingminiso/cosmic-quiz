@@ -348,6 +348,67 @@ const BANK = [
   { topic:"pat_ing", cat:"🤔 สามัญสำนึก", diff:"medium", text:"ถ้าคุณเห็นคนกำลังนอนหลับ คุณควรทำอะไร?", options:["ปลุก","ตะโกน","ปล่อยให้นอน","ถ่ายคลิปลง TikTok"], correctIndex:2 },
   { topic:"pat_ing", cat:"🤔 สามัญสำนึก", diff:"hard", text:"ถ้าฝนตกหนักมาก คุณจะทำอย่างไรเพื่อไม่ให้เปียก?", options:["วิ่งเร็วขึ้น","กางร่ม","นอนรอ","ด่าฝน"], correctIndex:1 },
   { topic:"pat_ing", cat:"🤔 สามัญสำนึก", diff:"easy", text:"ถ้าคุณตื่นขึ้นมาแล้วพบว่าตัวเองอยู่บนเตียง สิ่งแรกที่ควรทำคืออะไร?", options:["ตื่น","ลุก","เช็กมือถือ","นอนต่อ"], correctIndex:0 },
+
+  /* ---------------------------- คณิตศาสตร์ ---------------------------- */
+  // ---- ➕ เลขคณิต ----
+  { topic:"math", cat:"➕ เลขคณิต", diff:"easy", text:"7 + 8 เท่ากับเท่าไหร่", options:["14","15","16","17"], correctIndex:1 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"easy", text:"12 × 3 เท่ากับเท่าไหร่", options:["24","36","32","30"], correctIndex:1 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"easy", text:"100 - 45 เท่ากับเท่าไหร่", options:["45","55","65","50"], correctIndex:1 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"medium", text:"144 ÷ 12 เท่ากับเท่าไหร่", options:["10","11","12","13"], correctIndex:2 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"medium", text:"15% ของ 200 เท่ากับเท่าไหร่", options:["20","25","30","35"], correctIndex:2 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"medium", text:"(8+2) × (6-3) เท่ากับเท่าไหร่", options:["20","30","10","15"], correctIndex:1 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"hard", text:"ผลบวกของเลข 1 ถึง 10 คือเท่าไหร่", options:["45","50","55","60"], correctIndex:2 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"hard", text:"2 ยกกำลัง 10 (2^10) เท่ากับเท่าไหร่", options:["512","1024","2048","256"], correctIndex:1 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"hard", text:"ถ้า a=5, b=3 แล้ว a² - b² เท่ากับเท่าไหร่", options:["16","15","14","17"], correctIndex:0 },
+  { topic:"math", cat:"➕ เลขคณิต", diff:"medium", text:"ครึ่งหนึ่งของ 3/4 เท่ากับเท่าไหร่", options:["1/2","3/8","1/4","2/3"], correctIndex:1 },
+
+  // ---- 📐 เรขาคณิต ----
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"easy", text:"รูปสามเหลี่ยมมีกี่ด้าน", options:["2","3","4","5"], correctIndex:1 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"easy", text:"มุมฉากมีขนาดกี่องศา", options:["45","90","180","360"], correctIndex:1 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"easy", text:"วงกลมมีมุมกี่มุม", options:["0","1","2","ไม่จำกัด"], correctIndex:0 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"medium", text:"สี่เหลี่ยมผืนผ้ากว้าง 4 หน่วย ยาว 6 หน่วย มีพื้นที่เท่าไหร่", options:["20","24","28","10"], correctIndex:1 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"medium", text:"เส้นรอบวงของวงกลมคำนวณจากสูตรใด (r = รัศมี)", options:["πr²","2πr","πr","4r"], correctIndex:1 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"medium", text:"สามเหลี่ยมด้านเท่ามีมุมภายในแต่ละมุมกี่องศา", options:["45","60","90","120"], correctIndex:1 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"hard", text:"วงกลมรัศมี 5 หน่วย มีพื้นที่ประมาณเท่าไหร่ (π ≈ 3.14)", options:["15.7","78.5","31.4","50"], correctIndex:1 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"hard", text:"ผลรวมมุมภายในของรูปหกเหลี่ยม (hexagon) เท่ากับกี่องศา", options:["540","720","900","360"], correctIndex:1 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"medium", text:"สี่เหลี่ยมจัตุรัสด้านยาว 5 หน่วย มีพื้นที่เท่าไหร่", options:["10","20","25","30"], correctIndex:2 },
+  { topic:"math", cat:"📐 เรขาคณิต", diff:"easy", text:"รูปสี่เหลี่ยมมีกี่ด้าน", options:["3","4","5","6"], correctIndex:1 },
+
+  // ---- 🔢 พีชคณิต ----
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"easy", text:"ถ้า x + 5 = 12 แล้ว x เท่ากับเท่าไหร่", options:["5","6","7","8"], correctIndex:2 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"easy", text:"ถ้า 2x = 10 แล้ว x เท่ากับเท่าไหร่", options:["2","4","5","10"], correctIndex:2 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"medium", text:"ถ้า 3x - 4 = 11 แล้ว x เท่ากับเท่าไหร่", options:["3","4","5","6"], correctIndex:2 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"medium", text:"(x+2)(x-2) เท่ากับนิพจน์ใดเมื่อกระจาย", options:["x²-4","x²+4","x²-2x","x²+2x"], correctIndex:0 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"medium", text:"ถ้า y = 2x + 1 และ x = 3 แล้ว y เท่ากับเท่าไหร่", options:["5","6","7","8"], correctIndex:2 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"hard", text:"ถ้า x² = 49 แล้ว x มีค่าเท่าไหร่ (พิจารณาค่าบวก)", options:["6","7","8","9"], correctIndex:1 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"hard", text:"ถ้า 2x + 3y = 12 และ y = 2 แล้ว x เท่ากับเท่าไหร่", options:["2","3","4","5"], correctIndex:1 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"easy", text:"ตัวแปร (Variable) ในพีชคณิตหมายถึงอะไร", options:["ตัวเลขคงที่","สัญลักษณ์แทนค่าที่ไม่ทราบ","เครื่องหมายบวก","จำนวนเฉพาะ"], correctIndex:1 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"hard", text:"(x-3)² เมื่อกระจายแล้วตรงกับข้อใด", options:["x²-6x+9","x²-9","x²+6x+9","x²-3x+9"], correctIndex:0 },
+  { topic:"math", cat:"🔢 พีชคณิต", diff:"medium", text:"ถ้า f(x) = x² + 1 แล้ว f(3) เท่ากับเท่าไหร่", options:["9","10","7","4"], correctIndex:1 },
+
+  // ---- 📊 สถิติและความน่าจะเป็น ----
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"easy", text:"ค่าเฉลี่ย (Mean) ของ 2, 4, 6 เท่ากับเท่าไหร่", options:["3","4","5","6"], correctIndex:1 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"easy", text:"ถ้าโยนเหรียญ 1 ครั้ง โอกาสออกหัวเท่ากับเท่าไหร่", options:["0","1/4","1/2","1"], correctIndex:2 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"medium", text:"มัธยฐาน (Median) ของชุดข้อมูล 2, 3, 5, 7, 9 คือเท่าไหร่", options:["5","7","3","9"], correctIndex:0 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"medium", text:"ฐานนิยม (Mode) ของ 2, 3, 3, 4, 5, 3 คือเท่าไหร่", options:["2","3","4","5"], correctIndex:1 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"medium", text:"ลูกเต๋า 1 ลูก มีโอกาสออกเลข 6 เท่ากับเท่าไหร่", options:["1/2","1/3","1/6","1/4"], correctIndex:2 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"hard", text:"ถ้าโยนเหรียญ 2 ครั้ง โอกาสที่จะออกหัวทั้งสองครั้งเท่ากับเท่าไหร่", options:["1/2","1/3","1/4","1/8"], correctIndex:2 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"hard", text:"พิสัย (Range) ของข้อมูล 10, 15, 3, 8, 20 คือเท่าไหร่", options:["17","20","15","10"], correctIndex:0 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"easy", text:"ข้อมูลที่เก็บได้จากการสำรวจเรียกว่าอะไร", options:["สมมติฐาน","ข้อมูล (Data)","สูตร","ทฤษฎี"], correctIndex:1 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"medium", text:"ในถุงมีลูกบอลสีแดง 3 ลูก สีน้ำเงิน 2 ลูก หยิบสุ่ม 1 ลูก โอกาสได้สีแดงเท่ากับเท่าไหร่", options:["3/5","2/5","1/5","1/2"], correctIndex:0 },
+  { topic:"math", cat:"📊 สถิติและความน่าจะเป็น", diff:"hard", text:"ค่าเฉลี่ยของ 4, 8, 15, 16, 23, 42 มีค่าเท่าไหร่", options:["16","18","20","15"], correctIndex:1 },
+
+  // ---- 🧮 จำนวนและทฤษฎีจำนวน ----
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"easy", text:"ข้อใดต่อไปนี้เป็นจำนวนเฉพาะ (Prime Number)", options:["4","6","7","9"], correctIndex:2 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"easy", text:"เลข 0 เป็นจำนวนคู่หรือจำนวนคี่", options:["จำนวนคู่","จำนวนคี่","ไม่ใช่ทั้งคู่","เป็นทั้งคู่"], correctIndex:0 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"medium", text:"ตัวหารร่วมมาก (ห.ร.ม.) ของ 12 และ 18 คือเท่าไหร่", options:["4","6","3","2"], correctIndex:1 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"medium", text:"ตัวคูณร่วมน้อย (ค.ร.น.) ของ 4 และ 6 คือเท่าไหร่", options:["8","12","24","6"], correctIndex:1 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"medium", text:"เลข 0 จัดอยู่ในกลุ่มจำนวนใด", options:["จำนวนเต็มบวก","จำนวนเต็มลบ","จำนวนเต็ม","จำนวนตรรกยะ"], correctIndex:2 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"hard", text:"จำนวนเฉพาะที่น้อยที่สุดที่มากกว่า 20 คือข้อใด", options:["21","22","23","24"], correctIndex:2 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"hard", text:"รากที่สองของ 144 มีค่าเท่าไหร่", options:["11","12","13","14"], correctIndex:1 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"easy", text:"จำนวนคู่คือจำนวนที่หารด้วยเลขใดลงตัว", options:["2","3","5","7"], correctIndex:0 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"hard", text:"ผลบวกของเลขคี่ 3 ตัวแรก (1+3+5) เท่ากับเท่าไหร่", options:["6","9","7","10"], correctIndex:1 },
+  { topic:"math", cat:"🧮 จำนวนและทฤษฎีจำนวน", diff:"medium", text:"จำนวนนับ (Natural Number) เริ่มต้นจากเลขใด", options:["0","1","-1","2"], correctIndex:1 },
 ];
 
 /* ============================= TOPICS ==================================== */
@@ -361,6 +422,7 @@ const TOPICS = [
   { key: 'biology', label: 'ชีววิทยา', emoji: '🧬' },
   { key: 'comp_eng', label: 'วิศวะคอมพิวเตอร์', emoji: '💻' },
   { key: 'pat_ing', label: 'PAT & ING', emoji: '🧠' },
+  { key: 'math', label: 'คณิตศาสตร์', emoji: '➗' },
 ];
 const TOPIC_KEYS = new Set(TOPICS.map(t => t.key));
 const DEFAULT_TOPICS = TOPICS.map(t => t.key);

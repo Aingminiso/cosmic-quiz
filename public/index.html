@@ -247,6 +247,43 @@ h1.logo{
   color:var(--text-2);font-style:italic;margin-top:10px;font-size:14px;
   max-width:420px;margin-left:auto;margin-right:auto;
 }
+/* roast popup — mascot that bounces up and taunts you on a wrong answer */
+.roast-pop{
+  margin-top:12px;display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.roast-char{
+  width:110px;height:auto;filter:drop-shadow(0 4px 10px rgba(248,113,113,.35));
+  animation:roastBounce .6s cubic-bezier(.34,1.56,.64,1);
+}
+.roast-bubble{
+  position:relative;margin-top:6px;max-width:320px;
+  background:var(--void-3);border:1px solid var(--danger);border-radius:14px;
+  padding:10px 14px;color:var(--text-1);font-size:13.5px;font-weight:600;
+  text-align:center;opacity:0;
+  animation:roastBubbleIn .35s ease-out .18s forwards;
+}
+.roast-bubble::before{
+  content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%) rotate(45deg);
+  width:12px;height:12px;background:var(--void-3);border-left:1px solid var(--danger);border-top:1px solid var(--danger);
+}
+@keyframes roastBounce{
+  0%{transform:translateY(40px) scale(.4) rotate(-8deg);opacity:0;}
+  55%{transform:translateY(-8px) scale(1.15) rotate(6deg);opacity:1;}
+  75%{transform:translateY(2px) scale(.96) rotate(-3deg);}
+  100%{transform:translateY(0) scale(1) rotate(0deg);}
+}
+@keyframes roastBubbleIn{
+  0%{opacity:0;transform:translateY(6px) scale(.85);}
+  100%{opacity:1;transform:translateY(0) scale(1);}
+}
+.reveal-banner.shake{animation:roastShake .4s ease;}
+@keyframes roastShake{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-6px);}
+  40%{transform:translateX(5px);}
+  60%{transform:translateX(-4px);}
+  80%{transform:translateX(3px);}
+}
 .score-breakdown{
   display:flex;justify-content:center;gap:18px;margin:22px 0;
   font-family:var(--font-mono);font-size:13px;color:var(--text-2);flex-wrap:wrap;
@@ -462,7 +499,7 @@ h1.logo{
       <div class="reveal-banner">
         <div class="reveal-icon" id="reveal-icon">✅</div>
         <div class="reveal-title good" id="reveal-title">ตอบถูกต้อง!</div>
-        <div class="taunt" id="reveal-taunt"></div>
+        <div id="reveal-taunt"></div>
         <div class="correct-answer-line" id="reveal-correct-answer"></div>
       </div>
       <div class="score-breakdown" id="score-breakdown"></div>
@@ -562,8 +599,29 @@ const TAUNTS = [
   "ดาวพุธยังโคจรได้ แต่นายไปต่อไม่ได้",
   "หลุมดำยังไม่ดูดนาย แต่คะแนนดูดไปแล้ว",
   "ดาวหางยังมีหาง แต่คำตอบนี้ไม่มีทางถูก",
+  "ตอบแบบนี้...สงสัยวันนี้จะลืมพกสติมา",
+  "คำตอบที่เลือก...ดูน่ารักแบบเธอจริงๆ",
+  "เพราะตอบแบบนี้ไง..ถึงเป็นได้แค่เพื่อน!",
 ];
+/* mascot image that bounces up to deliver the roast on a wrong answer */
+const ROAST_MASCOT_SRC = "/roast-mascot.png";
 const AVATARS = ["👨‍🚀","👩‍🚀","🧑‍🚀","👽","🛸","🌠"];
+
+/* ---------- roast popup (mascot + speech bubble on a wrong answer) ---------- */
+function showRoastPopup(){
+  const line = TAUNTS[Math.floor(Math.random()*TAUNTS.length)];
+  const wrap = document.getElementById('reveal-taunt');
+  wrap.innerHTML =
+    `<div class="roast-pop">
+       <img class="roast-char" src="${ROAST_MASCOT_SRC}" alt="roast mascot">
+       <div class="roast-bubble">${line}</div>
+     </div>`;
+  // re-trigger the shake on the banner every time, even for repeat wrong answers
+  const banner = document.querySelector('#screen-reveal .reveal-banner');
+  banner.classList.remove('shake');
+  void banner.offsetWidth; // force reflow so the animation restarts
+  banner.classList.add('shake');
+}
 
 /* ---------- toast helper ---------- */
 let toastTimer=null;
@@ -982,7 +1040,7 @@ function paintReveal(data){
     document.getElementById('reveal-icon').textContent = '✅';
     document.getElementById('reveal-title').textContent = 'ตอบถูกต้อง!';
     document.getElementById('reveal-title').className = 'reveal-title good';
-    document.getElementById('reveal-taunt').textContent = '';
+    document.getElementById('reveal-taunt').innerHTML = '';
     const s = rv.yourBreakdown || {base:0,bonus:0,mult:1,total:0};
     document.getElementById('score-breakdown').innerHTML = `
       <div><b>+${s.base}</b>คะแนนพื้นฐาน (${q.diffLabel})</div>
@@ -995,7 +1053,7 @@ function paintReveal(data){
     document.getElementById('reveal-icon').textContent = rv.yourAnswerIndex===-1 ? '⏱️' : '💀';
     document.getElementById('reveal-title').textContent = rv.yourAnswerIndex===-1 ? 'หมดเวลา!' : 'WRONG ANSWER';
     document.getElementById('reveal-title').className = 'reveal-title bad';
-    document.getElementById('reveal-taunt').textContent = '"' + TAUNTS[Math.floor(Math.random()*TAUNTS.length)] + '"';
+    showRoastPopup();
     document.getElementById('score-breakdown').innerHTML = `<div><b>0</b>คะแนน</div>`;
     document.getElementById('total-score-line').textContent = `+0 คะแนน`;
   }

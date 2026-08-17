@@ -96,6 +96,15 @@ To change the port: `PORT=8080 npm start`.
 chance of getting it right (85% easy / 65% medium / 45% hard) after a random
 1.5–7.5s "thinking" delay, so a solo host can fully test/demo the game flow.
 
+## Roast popup (wrong answer)
+
+When you answer wrong (or time out), a mascot (`public/roast-mascot.png`)
+bounces up next to a random roast line from the `TAUNTS` array in
+`public/index.html`, with a small screen-shake on the reveal card. Add more
+lines by editing `TAUNTS`; swap the character by replacing
+`public/roast-mascot.png` (keep the same filename, or update
+`ROAST_MASCOT_SRC` in `public/index.html` if you rename it).
+
 ## Who answered what
 
 On the reveal screen, everyone in the room sees a full breakdown of every
