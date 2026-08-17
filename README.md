@@ -96,12 +96,22 @@ To change the port: `PORT=8080 npm start`.
 chance of getting it right (85% easy / 65% medium / 45% hard) after a random
 1.5–7.5s "thinking" delay, so a solo host can fully test/demo the game flow.
 
+## Randomization
+
+- Each match draws a fresh, fully shuffled random subset of the question
+  bank (`shuffle(BANK).slice(0, MAX_QUESTIONS)`) — question order is never
+  sequential by category or difficulty, and never repeats the same order
+  twice.
+- On top of that, each question's 4 answer options are independently
+  shuffled per match too, so the correct answer isn't predictably sitting
+  in the same slot every time a question comes up.
+
 ## Notes / limits
 
 - State is in-memory only — restarting the server (or a Render free-tier
   sleep/wake cycle) clears all rooms. Start rooms fresh right before playing.
 - Rooms with no human heartbeat for 30 minutes are automatically cleaned up.
-- Question bank has 32 questions across 5 categories × 3 difficulties; each
+- Question bank has 82 questions across 5 categories × 3 difficulties; each
   match randomly samples up to 20 of them (`MAX_QUESTIONS` in `server.js`).
 - To tweak timing, edit `QUESTION_TIME` / `REVEAL_TIME` in `server.js` — just
   make sure `QUESTION_TIME` still matches the `QUESTION_TIME` constant near
