@@ -1,0 +1,15 @@
+{
+  "name": "cosmic-quiz-lan",
+  "version": "1.0.0",
+  "description": "COSMIC QUIZ — LAN multiplayer astronomy quiz game (Node.js + Express backend, static frontend).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
