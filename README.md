@@ -117,6 +117,19 @@ labeled 🤖; anyone who ran out the clock without answering shows up as
   (`room.timeSaved` in `server.js`), so it stays driftless and stateless
   across polls exactly like before.
 
+## Question categories
+
+Questions are grouped under a top-level "topic" — everything currently in
+the bank belongs to topic **ดาราศาสตร์ (Astronomy)** 🌌. In the lobby, the
+host sees a "🗂️ หมวดหมู่คำถาม" picker showing available topics as toggle
+chips; only topics selected there are drawn from when the match starts
+(`GET /api/topics`, `POST /api/rooms/:code/topics`, filtered in
+`room.topics` on `server.js`). With only one topic in the bank today the
+chip is just shown as locked/selected — adding a second topic later (tag
+new `BANK` entries with `topic:'<key>'` and add a matching entry to the
+`TOPICS` array in `server.js`) automatically makes the picker interactive
+with no other changes needed.
+
 ## Randomization
 
 - Each match draws a fresh, fully shuffled random subset of the question

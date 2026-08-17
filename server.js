@@ -10,6 +10,8 @@
  *   POST /api/rooms/:code/heartbeat           keep-alive ping
  *   POST /api/rooms/:code/ready               toggle ready in lobby
  *   POST /api/rooms/:code/addbot              host adds an AI bot player
+ *   GET  /api/topics                          list available question topics
+ *   POST /api/rooms/:code/topics               host sets which topics to play
  *   POST /api/rooms/:code/start               host starts the match
  *   POST /api/rooms/:code/answer              submit an answer to the current question
  *
@@ -162,6 +164,27 @@ const BANK = [
   { cat:"🌌 จักรวาลวิทยา", diff:"hard", text:"นักวิทยาศาสตร์ผู้เสนอทฤษฎีสัมพัทธภาพทั่วไป ซึ่งเป็นพื้นฐานสำคัญของจักรวาลวิทยาสมัยใหม่คือใคร", options:["ไอแซก นิวตัน","อัลเบิร์ต ไอน์สไตน์","สตีเฟน ฮอว์คิง","เอ็ดวิน ฮับเบิล"], correctIndex:1 },
   { cat:"🌌 จักรวาลวิทยา", diff:"hard", text:"สสารปกติ (ที่ไม่ใช่สสารมืดหรือพลังงานมืด) คิดเป็นสัดส่วนโดยประมาณเท่าใดของมวล-พลังงานทั้งหมดในเอกภพ", options:["ประมาณ 5%","ประมาณ 27%","ประมาณ 68%","ประมาณ 95%"], correctIndex:0 },
 ];
+
+/* ============================= TOPICS ==================================== */
+/* A "topic" is the top-level subject a room can be limited to (e.g. all      */
+/* astronomy questions). Every entry in BANK currently belongs to the one     */
+/* topic below; adding a future topic later is just: tag its BANK questions  */
+/* with topic:'<key>', then add a matching entry to TOPICS here.             */
+
+const TOPICS = [
+  { key: 'astronomy', label: 'ดาราศาสตร์', emoji: '🌌' },
+];
+const TOPIC_KEYS = new Set(TOPICS.map(t => t.key));
+const DEFAULT_TOPICS = TOPICS.map(t => t.key);
+
+// Everything currently in the bank is astronomy content.
+BANK.forEach(q => { if (!q.topic) q.topic = 'astronomy'; });
+
+function topicsWithCounts() {
+  const counts = {};
+  BANK.forEach(q => { counts[q.topic] = (counts[q.topic] || 0) + 1; });
+  return TOPICS.map(t => ({ ...t, count: counts[t.key] || 0 }));
+}
 
 /* ============================ IN-MEMORY STATE ============================ */
 
@@ -372,9 +395,30 @@ app.post('/api/rooms', (req, res) => {
     timeSaved: 0,
     autoAdvanced: {},
     createdAt: Date.now(),
+    topics: DEFAULT_TOPICS.slice(),
   });
 
   res.json({ roomCode: code, playerId });
+});
+
+app.get('/api/topics', (req, res) => {
+  res.json({ topics: topicsWithCounts() });
+});
+
+app.post('/api/rooms/:code/topics', (req, res) => {
+  const room = rooms.get(req.params.code);
+  if (!room) return res.status(404).json({ error: 'ROOM_NOT_FOUND' });
+  const player = room.players.find(p => p.id === req.body.playerId);
+  if (!player) return res.status(404).json({ error: 'PLAYER_NOT_FOUND' });
+  if (!player.isHost) return res.status(403).json({ error: 'NOT_HOST' });
+  if (room.started) return res.status(400).json({ error: 'ALREADY_STARTED' });
+
+  const requested = Array.isArray(req.body.topics) ? req.body.topics : [];
+  const valid = requested.filter(t => TOPIC_KEYS.has(t));
+  if (valid.length === 0) return res.status(400).json({ error: 'NO_TOPICS_SELECTED' });
+
+  room.topics = [...new Set(valid)];
+  res.json({ ok: true, topics: room.topics });
 });
 
 app.post('/api/rooms/:code/join', (req, res) => {
@@ -435,8 +479,11 @@ app.post('/api/rooms/:code/start', (req, res) => {
   if (room.players.length < 1) return res.status(400).json({ error: 'NOT_ENOUGH_PLAYERS' });
   if (!room.players.every(p => p.ready)) return res.status(400).json({ error: 'NOT_ALL_READY' });
 
-  const count = Math.min(MAX_QUESTIONS, BANK.length);
-  room.questions = shuffle(BANK).slice(0, count).map(shuffleQuestionOptions);
+  const activeTopics = (room.topics && room.topics.length) ? room.topics : DEFAULT_TOPICS;
+  const pool = BANK.filter(q => activeTopics.includes(q.topic));
+  const usable = pool.length ? pool : BANK; // safety net — never leave a room with 0 questions
+  const count = Math.min(MAX_QUESTIONS, usable.length);
+  room.questions = shuffle(usable).slice(0, count).map(shuffleQuestionOptions);
   room.answers = {};
   room.timeSaved = 0;
   room.autoAdvanced = {};
@@ -487,6 +534,7 @@ app.get('/api/rooms/:code/state', (req, res) => {
       roomCode: room.code,
       you: { id: player.id, isHost: !!player.isHost, ready: !!player.ready, name: player.name, avatar: player.avatar },
       players: playersView(room),
+      topics: (room.topics && room.topics.length) ? room.topics : DEFAULT_TOPICS,
     });
   }
 

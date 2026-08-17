@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COSMIC QUIZ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root{
+  --void:#0a0e1a;
+  --void-2:#111629;
+  --void-3:#181f38;
+  --purple:#7c3aed;
+  --violet:#a78bfa;
+  --cyan:#22d3ee;
+  --magenta:#ec4899;
+  --gold:#fbbf24;
+  --text-1:#e8ecf7;
+  --text-2:#8b93b0;
+  --danger:#f87171;
+  --success:#34d399;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'Space Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--void);
+  color:var(--text-1);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  position:relative;
+  min-height:600px;
+}
+#stars{position:fixed;inset:0;z-index:0;}
+.nebula{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;z-index:0;pointer-events:none;}
+.nebula.n1{width:520px;height:520px;background:var(--purple);top:-160px;left:-120px;}
+.nebula.n2{width:460px;height:460px;background:var(--magenta);bottom:-180px;right:-140px;}
+.nebula.n3{width:380px;height:380px;background:var(--cyan);top:40%;right:10%;opacity:.18;}
+
+#app{
+  position:relative;z-index:1;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.screen{width:100%;max-width:640px;display:none;animation:fadeUp .5s ease;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12px;
+  letter-spacing:.18em;
+  color:var(--cyan);
+  text-transform:uppercase;
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.eyebrow::before{content:'';width:16px;height:1px;background:var(--cyan);display:inline-block;}
+
+h1.logo{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:clamp(38px,7vw,58px);
+  line-height:1.02;
+  background:linear-gradient(120deg,var(--text-1) 30%,var(--violet) 65%,var(--cyan) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  letter-spacing:-.01em;
+}
+.tagline{color:var(--text-2);font-size:15px;margin-top:10px;margin-bottom:36px;}
+
+.btn{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:15px;
+  border:none;
+  border-radius:12px;
+  padding:16px 22px;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;
+}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn-primary{
+  background:linear-gradient(120deg,var(--purple),var(--magenta));
+  color:#fff;
+  box-shadow:0 8px 24px -8px rgba(124,58,237,.6);
+}
+.btn-primary:hover:not(:disabled){box-shadow:0 10px 30px -6px rgba(124,58,237,.75);}
+.btn-ghost{
+  background:var(--void-3);
+  color:var(--text-1);
+  border:1px solid #2a3252;
+}
+.btn-ghost:hover:not(:disabled){border-color:var(--cyan);}
+.btn-row{display:grid;gap:12px;}
+.btn small{display:block;font-family:var(--font-body);font-weight:400;color:var(--text-2);font-size:12px;margin-top:2px;}
+.btn .arrow{opacity:.6;font-size:18px;}
+
+.field{margin-bottom:18px;}
+.field label{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--text-2);text-transform:uppercase;margin-bottom:8px;}
+.field input{
+  width:100%;background:var(--void-3);border:1px solid #2a3252;border-radius:10px;
+  padding:14px 16px;color:var(--text-1);font-family:var(--font-display);font-size:18px;
+  letter-spacing:.03em;text-transform:uppercase;
+}
+.field input:focus{outline:none;border-color:var(--cyan);}
+.field input::placeholder{color:#565f80;text-transform:none;}
+
+.avatar-row{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.avatar-opt{
+  width:46px;height:46px;border-radius:10px;background:var(--void-3);
+  border:1px solid #2a3252;font-size:22px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.avatar-opt.sel{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(34,211,238,.25);}
+
+.topic-row{display:flex;gap:10px;flex-wrap:wrap;}
+.topic-chip{
+  display:flex;align-items:center;gap:6px;
+  background:var(--void-3);border:1px solid #2a3252;border-radius:999px;
+  padding:8px 14px;font-family:var(--font-body);font-size:13px;color:var(--text-2);
+  cursor:pointer;user-select:none;
+}
+.topic-chip .count{font-family:var(--font-mono);font-size:11px;color:var(--text-2);opacity:.7;}
+.topic-chip.sel{border-color:var(--cyan);color:var(--text-1);box-shadow:0 0 0 2px rgba(34,211,238,.25);}
+.topic-chip.locked{cursor:default;opacity:.85;}
+
+.room-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--font-mono);font-size:14px;letter-spacing:.08em;
+  background:var(--void-3);border:1px solid #2a3252;border-radius:999px;
+  padding:8px 16px;color:var(--gold);margin-bottom:14px;cursor:pointer;
+}
+.room-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);flex-shrink:0;}
+.room-badge .hint{font-family:var(--font-body);color:var(--text-2);font-size:11px;}
+
+.lan-url{
+  font-family:var(--font-mono);font-size:12px;color:var(--text-2);
+  background:var(--void-3);border:1px dashed #2a3252;border-radius:10px;
+  padding:10px 14px;margin-bottom:18px;word-break:break-all;
+}
+.lan-url b{color:var(--cyan);}
+
+.card{background:var(--void-2);border:1px solid #212a4a;border-radius:16px;padding:22px;}
+
+.player-row{
+  display:flex;align-items:center;gap:12px;padding:12px 4px;
+  border-bottom:1px solid #1c2340;
+}
+.player-row:last-child{border-bottom:none;}
+.player-row .avatar{font-size:22px;width:38px;height:38px;background:var(--void-3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.player-row .name{font-family:var(--font-display);font-weight:600;flex:1;}
+.player-row .name .tag{font-family:var(--font-mono);font-size:11px;color:var(--text-2);font-weight:400;margin-left:4px;}
+.player-row .status{font-size:12px;font-family:var(--font-mono);flex-shrink:0;}
+.status.ready{color:var(--success);}
+.status.notready{color:var(--text-2);}
+
+.progress-tag{
+  font-family:var(--font-mono);font-size:12px;color:var(--text-2);
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;
+}
+.cat-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--void-3);border:1px solid #2a3252;border-radius:999px;
+  padding:5px 12px;font-size:12px;font-family:var(--font-mono);color:var(--violet);
+}
+.diff-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  border-radius:999px;padding:5px 12px;font-size:12px;font-family:var(--font-mono);
+  border:1px solid #2a3252;margin-left:8px;
+}
+.diff-easy{color:var(--success);border-color:rgba(52,211,153,.4);}
+.diff-medium{color:var(--gold);border-color:rgba(251,191,36,.4);}
+.diff-hard{color:var(--danger);border-color:rgba(248,113,113,.4);}
+
+.answered-tag{font-family:var(--font-mono);font-size:12px;color:var(--text-2);}
+
+.correct-answer-line{
+  font-family:var(--font-mono);font-size:13px;color:var(--text-2);margin-top:12px;
+}
+.correct-answer-line b{color:var(--success);}
+
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:10px;}
+.timer-wrap{position:relative;width:72px;height:72px;flex-shrink:0;}
+.timer-wrap svg{transform:rotate(-90deg);width:72px;height:72px;}
+.timer-wrap circle{fill:none;stroke-width:5;}
+.timer-track{stroke:#212a4a;}
+.timer-bar{stroke:var(--cyan);stroke-linecap:round;transition:stroke .3s ease;}
+.timer-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-weight:700;font-size:20px;
+}
+
+.question-text{
+  font-family:var(--font-display);font-weight:600;font-size:clamp(20px,4vw,25px);
+  line-height:1.35;margin:14px 0 24px;
+}
+
+.options{display:grid;gap:12px;}
+.opt{
+  text-align:left;
+  background:var(--void-3);border:1px solid #2a3252;border-radius:12px;
+  padding:15px 16px;color:var(--text-1);font-family:var(--font-body);font-size:15px;
+  cursor:pointer;transition:border-color .15s,background .15s,transform .1s;
+  display:flex;gap:12px;align-items:center;
+}
+.opt .letter{
+  font-family:var(--font-mono);color:var(--text-2);font-weight:700;font-size:13px;
+  width:24px;height:24px;border-radius:6px;background:var(--void-2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.opt:hover:not(:disabled){border-color:var(--cyan);}
+.opt:disabled{cursor:default;}
+.opt.correct{border-color:var(--success);background:rgba(52,211,153,.12);}
+.opt.correct .letter{background:var(--success);color:#04261a;}
+.opt.wrong{border-color:var(--danger);background:rgba(248,113,113,.12);}
+.opt.wrong .letter{background:var(--danger);color:#2a0808;}
+.opt.dim{opacity:.4;}
+.opt.picked{border-color:var(--violet);}
+
+.combo-strip{
+  display:flex;align-items:center;gap:8px;margin-top:0;
+  font-family:var(--font-mono);font-size:12px;color:var(--gold);
+}
+
+.waiting-line{
+  text-align:center;color:var(--text-2);font-family:var(--font-mono);font-size:13px;margin-top:18px;
+}
+
+/* reveal */
+.reveal-banner{
+  text-align:center;padding:20px 0 8px;
+}
+.reveal-icon{font-size:44px;margin-bottom:8px;}
+.reveal-title{font-family:var(--font-display);font-weight:700;font-size:24px;}
+.reveal-title.good{color:var(--success);}
+.reveal-title.bad{color:var(--danger);}
+.taunt{
+  color:var(--text-2);font-style:italic;margin-top:10px;font-size:14px;
+  max-width:420px;margin-left:auto;margin-right:auto;
+}
+.score-breakdown{
+  display:flex;justify-content:center;gap:18px;margin:22px 0;
+  font-family:var(--font-mono);font-size:13px;color:var(--text-2);flex-wrap:wrap;
+}
+.score-breakdown b{color:var(--text-1);font-size:16px;display:block;}
+.total-score{
+  text-align:center;font-family:var(--font-display);font-weight:700;font-size:34px;
+  color:var(--gold);margin:8px 0 20px;
+}
+.next-countdown{
+  text-align:center;font-family:var(--font-mono);font-size:12px;color:var(--text-2);margin-top:16px;
+}
+.next-countdown b{color:var(--cyan);}
+
+.mini-lb{margin-top:22px;}
+.mini-lb-row{
+  display:flex;align-items:center;gap:10px;padding:9px 4px;font-size:14px;
+}
+.mini-lb-row .rank{font-family:var(--font-mono);color:var(--text-2);width:22px;flex-shrink:0;}
+.mini-lb-row .nm{flex:1;font-family:var(--font-display);font-weight:600;}
+.mini-lb-row .sc{font-family:var(--font-mono);color:var(--gold);}
+.mini-lb-row.me{background:rgba(124,58,237,.15);border-radius:8px;}
+
+.round-answers{margin-top:20px;}
+.round-answers .section-label{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--text-2);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.ra-row{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;font-size:13px;
+  border-radius:10px;margin-bottom:6px;border:1px solid transparent;
+}
+.ra-row.ok{background:rgba(52,211,153,.10);border-color:rgba(52,211,153,.35);}
+.ra-row.bad{background:rgba(248,113,113,.10);border-color:rgba(248,113,113,.35);}
+.ra-row.timeout{background:rgba(139,147,176,.08);border-color:rgba(139,147,176,.25);}
+.ra-row.me{box-shadow:0 0 0 1px var(--cyan) inset;}
+.ra-row .av{font-size:18px;width:28px;height:28px;background:var(--void-3);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ra-row .nm{font-family:var(--font-display);font-weight:600;flex-shrink:0;max-width:34%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ra-row .pick{flex:1;font-family:var(--font-mono);font-size:12px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ra-row .pick b{color:var(--text-1);}
+.ra-row .pick-letter{
+  font-family:var(--font-mono);font-weight:700;font-size:11px;width:20px;height:20px;flex-shrink:0;
+  border-radius:6px;display:flex;align-items:center;justify-content:center;background:var(--void-3);
+}
+.ra-row.ok .pick-letter{background:var(--success);color:#04261a;}
+.ra-row.bad .pick-letter{background:var(--danger);color:#2a0808;}
+.ra-row .icon{flex-shrink:0;font-size:14px;}
+
+/* end game */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:28px 0 8px;}
+.pod-col{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.pod-bar{
+  width:84px;border-radius:10px 10px 0 0;
+  background:linear-gradient(180deg,var(--void-3),var(--void-2));
+  border:1px solid #2a3252;border-bottom:none;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:10px;
+  font-family:var(--font-mono);color:var(--text-2);font-size:12px;
+}
+.pod-col.p1 .pod-bar{height:130px;border-color:var(--gold);box-shadow:0 0 30px -8px rgba(251,191,36,.5);}
+.pod-col.p2 .pod-bar{height:96px;}
+.pod-col.p3 .pod-bar{height:70px;}
+.pod-medal{font-size:28px;}
+.pod-name{font-family:var(--font-display);font-weight:600;font-size:14px;}
+.pod-score{font-family:var(--font-mono);font-size:12px;color:var(--gold);}
+
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;}
+.stat-box{background:var(--void-3);border:1px solid #2a3252;border-radius:12px;padding:14px;}
+.stat-box .lbl{font-family:var(--font-mono);font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.06em;}
+.stat-box .val{font-family:var(--font-display);font-weight:700;font-size:20px;margin-top:4px;}
+
+.end-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
+.end-actions .btn{padding:14px;font-size:13px;justify-content:center;}
+
+.footer-note{
+  text-align:center;color:var(--text-2);font-size:11px;font-family:var(--font-mono);
+  margin-top:20px;line-height:1.6;
+}
+
+.err-banner{
+  background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.4);color:var(--danger);
+  border-radius:10px;padding:12px 14px;font-family:var(--font-mono);font-size:13px;margin-bottom:18px;
+  display:none;
+}
+.err-banner.show{display:block;}
+
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--void-3);border:1px solid var(--cyan);color:var(--text-1);
+  font-family:var(--font-mono);font-size:12px;padding:10px 18px;border-radius:999px;
+  z-index:50;opacity:0;pointer-events:none;transition:opacity .25s ease;
+}
+.toast.show{opacity:1;}
+
+::selection{background:var(--purple);color:#fff;}
+
+@media(max-width:480px){
+  .stat-grid{grid-template-columns:1fr;}
+  .end-actions{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="nebula n1"></div>
+<div class="nebula n2"></div>
+<div class="nebula n3"></div>
+
+<div id="app">
+
+  <!-- START -->
+  <div class="screen active" id="screen-start">
+    <div class="eyebrow">Online Multiplayer · Astronomy Party Game</div>
+    <h1 class="logo">🌌 COSMIC<br>QUIZ</h1>
+    <p class="tagline">"รู้จักจักรวาลแค่ไหน...เดี๋ยวเกมพิสูจน์ให้ดู"</p>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goTo('setup','create')">
+        <span>🚀 CREATE ROOM<br><small>เป็น Host และเริ่มภารกิจ</small></span>
+        <span class="arrow">→</span>
+      </button>
+      <button class="btn btn-ghost" onclick="goTo('setup','join')">
+        <span>🔑 JOIN ROOM<br><small>เข้าร่วมห้องด้วยรหัส/ลิงก์เชิญ</small></span>
+        <span class="arrow">→</span>
+      </button>
+    </div>
+    <p class="footer-note">ผู้เล่นทุกคนเข้าลิงก์เดียวกันได้จากที่ไหนก็ได้<br>🔊 เปิดเสียงเพื่ออรรถรส</p>
+  </div>
+
+  <!-- SETUP (room code + name) -->
+  <div class="screen" id="screen-setup">
+    <div class="eyebrow" id="setup-eyebrow">CREATE ROOM</div>
+    <h1 class="logo" style="font-size:32px;" id="setup-title">ตั้งชื่อนักบินอวกาศ</h1>
+    <p class="tagline" id="setup-sub">ชื่อนี้จะใช้ใน Lobby, คะแนน, Leaderboard และผลการแข่งขัน</p>
+    <div class="err-banner" id="setup-err"></div>
+    <div class="card">
+      <div class="field" id="join-code-field" style="display:none;">
+        <label>Room Code</label>
+        <input type="text" id="room-code-input" placeholder="เช่น COSMIC-1234" maxlength="20">
+      </div>
+      <div class="field">
+        <label>Enter Your Astronaut Name</label>
+        <input type="text" id="player-name-input" placeholder="เช่น อิง" maxlength="12" style="text-transform:none;">
+      </div>
+      <div class="field">
+        <label>เลือกอวตาร</label>
+        <div class="avatar-row" id="avatar-row"></div>
+      </div>
+      <button class="btn btn-primary" id="setup-submit-btn" onclick="submitSetup()">
+        <span>เข้าสู่ LOBBY</span><span class="arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- LOBBY -->
+  <div class="screen" id="screen-lobby">
+    <div class="room-badge" id="lobby-room-badge" onclick="copyInviteLink()">
+      <span class="dot"></span> <span id="lobby-room-code">COSMIC-0000</span>
+      <span class="hint">แตะเพื่อคัดลอกลิงก์เชิญ</span>
+    </div>
+    <h1 class="logo" style="font-size:30px;margin-bottom:10px;">🚀 LOBBY</h1>
+    <div class="lan-url" id="lan-url-box" style="display:none;"></div>
+    <div class="card" id="topics-card" style="display:none;margin-bottom:16px;">
+      <div class="hint" style="margin-bottom:10px;">🗂️ หมวดหมู่คำถาม</div>
+      <div class="topic-row" id="topics-row"></div>
+    </div>
+    <div class="card" id="lobby-player-list"></div>
+    <div style="margin-top:20px;">
+      <button class="btn btn-primary" id="ready-btn" onclick="toggleReady()">
+        <span id="ready-btn-label">⚪ กดพร้อม (READY)</span>
+      </button>
+    </div>
+    <div style="margin-top:12px;" id="host-controls">
+      <button class="btn btn-ghost" id="add-bot-btn" onclick="addBot()" style="margin-bottom:12px;">
+        <span>🤖 เพิ่มบอท (สำหรับทดสอบคนเดียว)</span>
+      </button>
+      <button class="btn btn-ghost" id="start-btn" onclick="startMission()" disabled>
+        <span>🚀 START MISSION</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="screen" id="screen-question">
+    <div class="progress-tag">
+      <span id="q-progress">QUESTION 01 / 20</span>
+      <span>
+        <span class="cat-pill" id="q-category">🌍 หมวด</span>
+        <span class="diff-pill" id="q-difficulty">ปานกลาง</span>
+      </span>
+    </div>
+    <div class="q-header">
+      <div style="flex:1;padding-right:14px;">
+        <div class="combo-strip" id="combo-strip"></div>
+      </div>
+      <div class="timer-wrap">
+        <svg viewBox="0 0 72 72">
+          <circle class="timer-track" cx="36" cy="36" r="30"></circle>
+          <circle class="timer-bar" id="timer-bar" cx="36" cy="36" r="30"
+            stroke-dasharray="188.5" stroke-dashoffset="0"></circle>
+        </svg>
+        <div class="timer-num" id="timer-num">10</div>
+      </div>
+    </div>
+    <div class="question-text" id="question-text">คำถาม...</div>
+    <div class="options" id="options-wrap"></div>
+    <div class="waiting-line" id="waiting-line" style="display:none;"></div>
+  </div>
+
+  <!-- REVEAL -->
+  <div class="screen" id="screen-reveal">
+    <div class="card">
+      <div class="reveal-banner">
+        <div class="reveal-icon" id="reveal-icon">✅</div>
+        <div class="reveal-title good" id="reveal-title">ตอบถูกต้อง!</div>
+        <div class="taunt" id="reveal-taunt"></div>
+        <div class="correct-answer-line" id="reveal-correct-answer"></div>
+      </div>
+      <div class="score-breakdown" id="score-breakdown"></div>
+      <div class="total-score" id="total-score-line"></div>
+      <div class="round-answers" id="round-answers"></div>
+      <div class="mini-lb" id="mini-lb"></div>
+    </div>
+    <div class="next-countdown" id="next-countdown"></div>
+  </div>
+
+  <!-- END GAME -->
+  <div class="screen" id="screen-end">
+    <div class="eyebrow">MISSION COMPLETE</div>
+    <h1 class="logo" style="font-size:32px;">👑 COSMIC CHAMPION</h1>
+    <div class="podium" id="podium"></div>
+    <div class="card" id="final-list" style="margin-top:8px;"></div>
+    <div class="stat-grid" id="stat-grid"></div>
+    <div class="end-actions">
+      <button class="btn btn-primary" onclick="playAgain()"><span>🔄 PLAY AGAIN</span></button>
+      <button class="btn btn-ghost" onclick="leaveToHome()"><span>🏠 BACK TO HOME</span></button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- starfield background ---------- */
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  stars = [];
+  const count = Math.floor((canvas.width*canvas.height)/9000);
+  for(let i=0;i<count;i++){
+    stars.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*1.4+0.3,
+      tw: Math.random()*Math.PI*2,
+      speed: Math.random()*0.02+0.005
+    });
+  }
+}
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(const s of stars){
+    s.tw += s.speed;
+    const alpha = 0.4 + Math.sin(s.tw)*0.4;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(232,236,247,${Math.max(0,alpha)})`;
+    ctx.fill();
+  }
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+drawStars();
+
+/* ---------- sound effects (Web Audio, no external files) ---------- */
+let audioCtx = null;
+function ensureAudio(){
+  if(!audioCtx){
+    try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return; }
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+}
+function tone(freq, start, dur, type='sine', peakVol=0.16){
+  if(!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime+start);
+  gain.gain.setValueAtTime(0, audioCtx.currentTime+start);
+  gain.gain.linearRampToValueAtTime(peakVol, audioCtx.currentTime+start+0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+start+dur);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(audioCtx.currentTime+start);
+  osc.stop(audioCtx.currentTime+start+dur+0.02);
+}
+function sfxClick(){ tone(520,0,0.06,'square',0.08); }
+function sfxTick(urgent){ tone(urgent?1046:784, 0, 0.08, 'square', 0.1); }
+function sfxCorrect(){ tone(523,0,0.12,'sine',0.15); tone(659,0.1,0.12,'sine',0.15); tone(880,0.2,0.22,'sine',0.16); }
+function sfxWrong(){ tone(220,0,0.18,'sawtooth',0.14); tone(150,0.14,0.28,'sawtooth',0.13); }
+function sfxWhoosh(){ tone(140,0,0.3,'sine',0.1); tone(420,0.05,0.25,'sine',0.08); }
+function sfxVictory(){ [523,659,784,1046].forEach((f,i)=>tone(f,i*0.14,0.3,'sine',0.15)); }
+
+const TAUNTS = [
+  "คำถามแค่นี้ สามล้อยังตอบได้เลย",
+  "จักรวาลกว้างขนาดนี้ แต่ความรู้เรากลับแคบจัง",
+  "ยานยังไม่พัง แต่สมองพังไปก่อนแล้ว",
+  "NASA โทรมา...บอกให้กลับไปอ่านหนังสือ",
+  "ดาวพุธยังโคจรได้ แต่นายไปต่อไม่ได้",
+  "หลุมดำยังไม่ดูดนาย แต่คะแนนดูดไปแล้ว",
+  "ดาวหางยังมีหาง แต่คำตอบนี้ไม่มีทางถูก",
+];
+const AVATARS = ["👨‍🚀","👩‍🚀","🧑‍🚀","👽","🛸","🌠"];
+
+/* ---------- toast helper ---------- */
+let toastTimer=null;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
+}
+
+/* ---------- local app/session state ---------- */
+let mode = 'create'; // 'create' | 'join'
+let roomCode = null;
+let playerId = null;
+let selectedAvatar = AVATARS[0];
+let pollTimer = null;
+let heartbeatTimer = null;
+let lastScreenKey = null; // to detect phase/question transitions for one-time effects
+let localAnswered = false;
+let localPickedIndex = null;
+let timerAnim = { synced:0, syncedAt:0 }; // for smooth countdown between polls
+let timerRaf = null;
+
+function goTo(screenId, m){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  if(screenId==='setup'){ mode = m; }
+  document.getElementById('screen-'+screenId).classList.add('active');
+}
+
+/* ---------- setup screen ---------- */
+function renderAvatarRow(){
+  const row = document.getElementById('avatar-row');
+  row.innerHTML = AVATARS.map(a=>`<div class="avatar-opt ${a===selectedAvatar?'sel':''}" data-a="${a}">${a}</div>`).join('');
+  row.querySelectorAll('.avatar-opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      selectedAvatar = el.dataset.a;
+      renderAvatarRow();
+    });
+  });
+}
+
+const origGoTo = goTo;
+goTo = function(screenId, m){
+  ensureAudio(); sfxClick();
+  origGoTo(screenId, m);
+  if(screenId==='setup'){
+    document.getElementById('setup-err').classList.remove('show');
+    document.getElementById('join-code-field').style.display = (mode==='join') ? 'block' : 'none';
+    document.getElementById('setup-eyebrow').textContent = mode==='create' ? 'CREATE ROOM' : 'JOIN ROOM';
+    document.getElementById('setup-title').textContent = mode==='create' ? 'สร้างห้องของคุณ' : 'เข้าร่วมห้อง';
+    document.getElementById('setup-submit-btn').querySelector('span').textContent = mode==='create' ? 'สร้างห้อง + เข้า LOBBY' : 'เข้าร่วม + เข้า LOBBY';
+    renderAvatarRow();
+    const codeInput = document.getElementById('room-code-input');
+    const params = new URLSearchParams(location.search);
+    if(mode==='join' && params.get('room')) codeInput.value = params.get('room');
+  }
+  if(screenId==='start'){
+    stopPolling();
+    roomCode = null; playerId = null;
+    localStorage.removeItem('cq_room'); localStorage.removeItem('cq_player'); localStorage.removeItem('cq_name');
+  }
+};
+
+function setupErr(msg){
+  const el = document.getElementById('setup-err');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+async function submitSetup(){
+  ensureAudio(); sfxWhoosh();
+  const name = document.getElementById('player-name-input').value.trim() || 'นักบิน';
+  document.getElementById('setup-submit-btn').disabled = true;
+  try{
+    if(mode==='create'){
+      const r = await api('/api/rooms', 'POST', { name, avatar: selectedAvatar });
+      roomCode = r.roomCode; playerId = r.playerId;
+    } else {
+      let code = document.getElementById('room-code-input').value.trim().toUpperCase();
+      if(!code){ setupErr('กรุณาใส่รหัสห้อง'); document.getElementById('setup-submit-btn').disabled=false; return; }
+      if(!code.startsWith('COSMIC-')) code = 'COSMIC-' + code.replace(/[^0-9]/g,'');
+      const r = await api(`/api/rooms/${encodeURIComponent(code)}/join`, 'POST', { name, avatar: selectedAvatar });
+      roomCode = code; playerId = r.playerId;
+    }
+    localStorage.setItem('cq_room', roomCode);
+    localStorage.setItem('cq_player', playerId);
+    localStorage.setItem('cq_name', name);
+    enterLobbyUI();
+  } catch(e){
+    setupErr(e.message === 'ROOM_NOT_FOUND' ? 'ไม่พบห้องนี้ ตรวจสอบรหัสห้องอีกครั้ง'
+      : e.message === 'ALREADY_STARTED' ? 'ห้องนี้เริ่มเกมไปแล้ว'
+      : 'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง');
+  }
+  document.getElementById('setup-submit-btn').disabled = false;
+}
+
+function enterLobbyUI(){
+  lastScreenKey = null;
+  goTo('lobby');
+  startPolling();
+  startHeartbeat();
+}
+
+function copyInviteLink(){
+  const url = `${location.origin}/?room=${encodeURIComponent(roomCode)}`;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>toast('คัดลอกลิงก์เชิญแล้ว! 📋')).catch(()=>toast(url));
+  } else {
+    toast(url);
+  }
+}
+
+/* ---------- API helper ---------- */
+async function api(path, method, body){
+  const res = await fetch(path, {
+    method,
+    headers: body ? {'Content-Type':'application/json'} : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  let data = {};
+  try{ data = await res.json(); }catch(e){}
+  if(!res.ok){
+    throw new Error(data.error || ('HTTP_'+res.status));
+  }
+  return data;
+}
+
+function startHeartbeat(){
+  clearInterval(heartbeatTimer);
+  heartbeatTimer = setInterval(()=>{
+    if(roomCode && playerId){
+      api(`/api/rooms/${roomCode}/heartbeat`, 'POST', {playerId}).catch(()=>{});
+    }
+  }, 5000);
+}
+
+/* ---------- polling loop ---------- */
+function startPolling(){
+  stopPolling();
+  pollOnce();
+  pollTimer = setInterval(pollOnce, 700);
+}
+function stopPolling(){
+  clearInterval(pollTimer); pollTimer=null;
+  cancelAnimationFrame(timerRaf); timerRaf=null;
+}
+
+let connectionLost = false;
+async function pollOnce(){
+  if(!roomCode || !playerId) return;
+  try{
+    const data = await api(`/api/rooms/${roomCode}/state?playerId=${encodeURIComponent(playerId)}`, 'GET');
+    if(connectionLost){ connectionLost=false; toast('เชื่อมต่อกลับมาแล้ว ✅'); }
+    render(data);
+  } catch(e){
+    if(!connectionLost){ connectionLost=true; toast('⚠️ เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กำลังลองใหม่...'); }
+    if(e.message === 'ROOM_NOT_FOUND' || e.message === 'PLAYER_NOT_FOUND'){
+      stopPolling();
+      setupErr('ห้องถูกปิดหรือเซิร์ฟเวอร์รีสตาร์ท กรุณาสร้าง/เข้าร่วมห้องใหม่');
+      localStorage.removeItem('cq_room'); localStorage.removeItem('cq_player');
+      goTo('start');
+    }
+  }
+}
+
+/* ---------- render dispatcher ---------- */
+function render(data){
+  if(data.phase === 'lobby') renderLobby(data);
+  else if(data.phase === 'question') renderQuestionPhase(data);
+  else if(data.phase === 'reveal') renderRevealPhase(data);
+  else if(data.phase === 'end') renderEndPhase(data);
+}
+
+/* ---------- topics (question category selection) ---------- */
+let availableTopics = null;   // [{key,label,emoji,count}] — fetched once, doesn't change at runtime
+let topicsFetching = null;
+let lastRenderedTopics = null; // last selected-topics array we drew chips for, to avoid re-render/flicker while typing
+
+async function ensureTopicsLoaded(){
+  if(availableTopics) return availableTopics;
+  if(!topicsFetching){
+    topicsFetching = api('/api/topics', 'GET').then(r => { availableTopics = r.topics; return availableTopics; }).catch(()=>{ topicsFetching = null; return null; });
+  }
+  return topicsFetching;
+}
+
+async function toggleTopic(key){
+  if(!availableTopics) return;
+  const selected = new Set(lastRenderedTopics || []);
+  if(selected.has(key)){
+    if(selected.size <= 1){ toast('ต้องเลือกอย่างน้อย 1 หมวดหมู่'); return; }
+    selected.delete(key);
+  } else {
+    selected.add(key);
+  }
+  try{
+    await api(`/api/rooms/${roomCode}/topics`, 'POST', { playerId, topics: [...selected] });
+    pollOnce();
+  }catch(e){ toast('เปลี่ยนหมวดหมู่ไม่สำเร็จ'); }
+}
+
+function renderTopicsBox(data){
+  const card = document.getElementById('topics-card');
+  const row = document.getElementById('topics-row');
+  const topics = data.topics || [];
+  const isHost = !!(data.you && data.you.isHost);
+
+  ensureTopicsLoaded().then(list => {
+    if(!list || list.length === 0){ card.style.display = 'none'; return; }
+    card.style.display = 'block';
+    lastRenderedTopics = topics;
+    const single = list.length === 1;
+    row.innerHTML = list.map(t => {
+      const sel = topics.includes(t.key);
+      const locked = single || !isHost; // nothing to pick between yet, or you're not the host
+      return `<div class="topic-chip ${sel?'sel':''} ${locked?'locked':''}" ${locked?'':`onclick="toggleTopic('${t.key}')"`}>
+        <span>${t.emoji} ${t.label}</span><span class="count">${t.count}</span>
+      </div>`;
+    }).join('');
+  });
+}
+
+/* ---------- lobby ---------- */
+function renderLobby(data){
+  if(document.getElementById('screen-lobby').classList.contains('active') === false){
+    goToScreenSilent('lobby');
+  }
+  document.getElementById('lobby-room-code').textContent = data.roomCode;
+  renderTopicsBox(data);
+  const lanBox = document.getElementById('lan-url-box');
+  if(data.you && data.you.isHost){
+    lanBox.style.display = 'block';
+    lanBox.innerHTML = `ชวนเพื่อนเข้ามาที่ &nbsp;<b>${location.origin}/?room=${data.roomCode}</b>`;
+  } else {
+    lanBox.style.display = 'none';
+  }
+
+  const list = document.getElementById('lobby-player-list');
+  list.innerHTML = data.players.map(p=>`
+    <div class="player-row">
+      <div class="avatar">${p.avatar}</div>
+      <div class="name">${p.name}${p.isHost?' <span class="tag">(Host)</span>':''}${p.isBot?' <span class="tag">🤖 BOT</span>':''}</div>
+      <div class="status ${p.ready?'ready':'notready'}">${p.ready?'🟢 พร้อม':'⚪ ยังไม่พร้อม'}</div>
+    </div>
+  `).join('');
+
+  const me = data.you;
+  const readyLabel = document.getElementById('ready-btn-label');
+  readyLabel.textContent = (me && me.ready) ? '🟢 พร้อมแล้ว' : '⚪ กดพร้อม (READY)';
+
+  const hostControls = document.getElementById('host-controls');
+  const startBtn = document.getElementById('start-btn');
+  const addBotBtn = document.getElementById('add-bot-btn');
+  if(me && me.isHost){
+    hostControls.style.display = 'block';
+    const allReady = data.players.length>0 && data.players.every(p=>p.ready);
+    startBtn.disabled = !allReady;
+    startBtn.classList.toggle('btn-primary', allReady);
+    startBtn.classList.toggle('btn-ghost', !allReady);
+    addBotBtn.style.display = 'block';
+  } else {
+    hostControls.style.display = 'none';
+  }
+}
+function goToScreenSilent(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+async function toggleReady(){
+  ensureAudio(); sfxClick();
+  // optimistic flip based on last known state; server reconciles on next poll
+  try{
+    const cur = await api(`/api/rooms/${roomCode}/state?playerId=${playerId}`, 'GET');
+    const nowReady = !(cur.you && cur.you.ready);
+    await api(`/api/rooms/${roomCode}/ready`, 'POST', {playerId, ready: nowReady});
+    pollOnce();
+  }catch(e){ toast('เกิดข้อผิดพลาด ลองใหม่อีกครั้ง'); }
+}
+
+async function addBot(){
+  ensureAudio(); sfxClick();
+  try{
+    await api(`/api/rooms/${roomCode}/addbot`, 'POST', {});
+    pollOnce();
+  }catch(e){ toast('เพิ่มบอทไม่สำเร็จ'); }
+}
+
+async function startMission(){
+  ensureAudio(); sfxWhoosh();
+  try{
+    await api(`/api/rooms/${roomCode}/start`, 'POST', {playerId});
+  }catch(e){ toast('ยังไม่พร้อมเริ่มเกม'); }
+}
+
+/* ---------- question phase ---------- */
+const CIRC = 2*Math.PI*30;
+const QUESTION_TIME = 10;
+
+function renderQuestionPhase(data){
+  const key = 'q'+data.question.index;
+  const isNewQuestion = (lastScreenKey !== key);
+  if(isNewQuestion){
+    lastScreenKey = key;
+    localAnswered = false;
+    localPickedIndex = null;
+    buildQuestionUI(data);
+    goToScreenSilent('question');
+  }
+
+  // sync timer (smoothed locally between polls)
+  timerAnim.synced = data.timeLeft;
+  timerAnim.syncedAt = performance.now();
+  if(!timerRaf) tickTimerVisual();
+
+  // reflect answered-count / waiting state
+  const waitingLine = document.getElementById('waiting-line');
+  if(localAnswered){
+    waitingLine.style.display = 'block';
+    waitingLine.textContent = `✅ ส่งคำตอบแล้ว — รอผู้เล่นคนอื่น (${data.answeredCount}/${data.players.length})`;
+  } else {
+    waitingLine.style.display = 'none';
+  }
+}
+
+function buildQuestionUI(data){
+  const q = data.question;
+  document.getElementById('q-progress').textContent = `QUESTION ${String(q.index+1).padStart(2,'0')} / ${q.total}`;
+  document.getElementById('q-category').textContent = q.cat;
+  const diffEl = document.getElementById('q-difficulty');
+  diffEl.textContent = q.diffLabel;
+  diffEl.className = 'diff-pill diff-' + q.diff;
+  document.getElementById('question-text').textContent = q.text;
+
+  const wrap = document.getElementById('options-wrap');
+  const letters = ['A','B','C','D'];
+  wrap.innerHTML = q.options.map((o,i)=>`
+    <button class="opt" data-i="${i}" onclick="selectAnswer(${i})">
+      <span class="letter">${letters[i]}</span><span>${o}</span>
+    </button>
+  `).join('');
+
+  const myStreak = (window.__lastStreak)||0;
+  const comboStrip = document.getElementById('combo-strip');
+  comboStrip.innerHTML = '';
+
+  document.getElementById('timer-bar').style.strokeDasharray = CIRC;
+  document.getElementById('timer-bar').style.strokeDashoffset = 0;
+  document.getElementById('timer-bar').style.stroke = 'var(--cyan)';
+  document.getElementById('timer-num').textContent = String(QUESTION_TIME);
+}
+
+function tickTimerVisual(){
+  const elapsedSince = (performance.now() - timerAnim.syncedAt)/1000;
+  const t = Math.max(0, timerAnim.synced - elapsedSince);
+  const pct = t/QUESTION_TIME;
+  const bar = document.getElementById('timer-bar');
+  const num = document.getElementById('timer-num');
+  if(bar){
+    bar.style.strokeDashoffset = CIRC*(1-Math.max(0,Math.min(1,pct)));
+    bar.style.stroke = t<=4 ? 'var(--danger)' : 'var(--cyan)';
+  }
+  if(num) num.textContent = String(Math.max(0, Math.ceil(t)));
+  if(document.getElementById('screen-question').classList.contains('active')){
+    timerRaf = requestAnimationFrame(tickTimerVisual);
+  } else {
+    timerRaf = null;
+  }
+}
+
+async function selectAnswer(idx){
+  if(localAnswered) return;
+  localAnswered = true;
+  localPickedIndex = idx;
+  ensureAudio(); sfxClick();
+  document.querySelectorAll('#options-wrap .opt').forEach(btn=>{
+    const i = Number(btn.dataset.i);
+    btn.disabled = true;
+    if(i===idx) btn.classList.add('picked');
+  });
+  document.getElementById('waiting-line').style.display = 'block';
+  document.getElementById('waiting-line').textContent = '✅ ส่งคำตอบแล้ว — รอผู้เล่นคนอื่น...';
+  try{
+    await api(`/api/rooms/${roomCode}/answer`, 'POST', {playerId, qIndex: Number(document.getElementById('q-progress').textContent.match(/\d+/)[0])-1, optionIndex: idx});
+  }catch(e){ /* server will just mark as no-answer if this truly failed */ }
+  pollOnce();
+}
+
+/* ---------- reveal phase ---------- */
+function renderRevealPhase(data){
+  const key = 'r'+data.question.index;
+  const isNew = (lastScreenKey !== key);
+  if(isNew){
+    lastScreenKey = key;
+    cancelAnimationFrame(timerRaf); timerRaf=null;
+    goToScreenSilent('reveal');
+    paintReveal(data);
+  }
+  const cd = document.getElementById('next-countdown');
+  const secs = Math.max(0, Math.ceil(data.revealTimeLeft));
+  cd.innerHTML = data.reveal.isLast
+    ? `🏁 กำลังสรุปผล ในอีก <b>${secs}s</b>...`
+    : `🚀 ข้อถัดไป ในอีก <b>${secs}s</b>...`;
+}
+
+function paintReveal(data){
+  const q = data.question;
+  const rv = data.reveal;
+  document.getElementById('reveal-correct-answer').innerHTML =
+    `เฉลย: <b>${rv.correctText}</b> <span style="color:var(--text-2)">(ความยาก: ${q.diffLabel})</span>`;
+
+  const correct = rv.yourCorrect;
+  if(correct === true){
+    ensureAudio(); sfxCorrect();
+    document.getElementById('reveal-icon').textContent = '✅';
+    document.getElementById('reveal-title').textContent = 'ตอบถูกต้อง!';
+    document.getElementById('reveal-title').className = 'reveal-title good';
+    document.getElementById('reveal-taunt').textContent = '';
+    const s = rv.yourBreakdown || {base:0,bonus:0,mult:1,total:0};
+    document.getElementById('score-breakdown').innerHTML = `
+      <div><b>+${s.base}</b>คะแนนพื้นฐาน (${q.diffLabel})</div>
+      <div><b>+${s.bonus}</b>Speed Bonus</div>
+      ${s.mult>1?`<div><b>x${s.mult.toFixed(1)}</b>Combo</div>`:''}
+    `;
+    document.getElementById('total-score-line').textContent = `+${rv.yourGain} คะแนน`;
+  } else {
+    ensureAudio(); sfxWrong();
+    document.getElementById('reveal-icon').textContent = rv.yourAnswerIndex===-1 ? '⏱️' : '💀';
+    document.getElementById('reveal-title').textContent = rv.yourAnswerIndex===-1 ? 'หมดเวลา!' : 'WRONG ANSWER';
+    document.getElementById('reveal-title').className = 'reveal-title bad';
+    document.getElementById('reveal-taunt').textContent = '"' + TAUNTS[Math.floor(Math.random()*TAUNTS.length)] + '"';
+    document.getElementById('score-breakdown').innerHTML = `<div><b>0</b>คะแนน</div>`;
+    document.getElementById('total-score-line').textContent = `+0 คะแนน`;
+  }
+
+  // color the options based on the answer that was already locked in question phase
+  document.querySelectorAll('#options-wrap .opt').forEach(btn=>{
+    const i = Number(btn.dataset.i);
+    btn.disabled = true;
+    btn.classList.remove('picked');
+    if(i===rv.correctIndex) btn.classList.add('correct');
+    else if(i===rv.yourAnswerIndex) btn.classList.add('wrong');
+    else btn.classList.add('dim');
+  });
+
+  const medals = ['🥇','🥈','🥉'];
+  document.getElementById('mini-lb').innerHTML = data.leaderboard.map((p,i)=>`
+    <div class="mini-lb-row ${p.id===playerId?'me':''}">
+      <span class="rank">${medals[i]||(i+1)+'.'}</span>
+      <span class="nm">${p.avatar||''} ${p.name}</span>
+      <span class="sc">${p.score.toLocaleString()}</span>
+    </div>
+  `).join('');
+
+  // ---- who answered what ----
+  const letters = ['A','B','C','D'];
+  const ra = (data.roundAnswers || []).slice().sort((a,b)=>{
+    // correct answers first (for maximum bragging/roasting effect), then by name
+    if(a.correct !== b.correct) return a.correct ? -1 : 1;
+    return a.name.localeCompare(b.name, 'th');
+  });
+  document.getElementById('round-answers').innerHTML = `
+    <div class="section-label">🎯 ใครตอบอะไร</div>
+    ${ra.map(p=>{
+      const timedOut = p.optionIndex === -1;
+      const cls = timedOut ? 'timeout' : (p.correct ? 'ok' : 'bad');
+      const pickHtml = timedOut
+        ? '<span class="pick">⏱️ หมดเวลา ไม่ได้ตอบ</span>'
+        : `<span class="pick-letter">${letters[p.optionIndex]}</span><span class="pick"><b>${p.optionText}</b></span>`;
+      const icon = timedOut ? '⏱️' : (p.correct ? '✅' : '❌');
+      return `
+        <div class="ra-row ${cls} ${p.id===playerId?'me':''}">
+          <span class="av">${p.avatar||''}</span>
+          <span class="nm">${p.name}${p.isBot?' 🤖':''}</span>
+          ${pickHtml}
+          <span class="icon">${icon}</span>
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+/* ---------- end game ---------- */
+function renderEndPhase(data){
+  if(lastScreenKey !== 'end'){
+    lastScreenKey = 'end';
+    ensureAudio(); sfxVictory();
+    goToScreenSilent('end');
+    paintEnd(data);
+  }
+}
+
+function paintEnd(data){
+  const all = data.end.players;
+  const podiumOrder = [all[1], all[0], all[2]].filter(Boolean);
+  const podiumClass = ['p2','p1','p3'];
+  const medals = ['🥈','🥇','🥉'];
+  document.getElementById('podium').innerHTML = podiumOrder.map((p,i)=>`
+    <div class="pod-col ${podiumClass[i]}">
+      <div class="pod-medal">${medals[i]}</div>
+      <div class="pod-name">${p.avatar||''} ${p.name}${p.id===playerId?' (คุณ)':''}</div>
+      <div class="pod-score">${p.score.toLocaleString()}</div>
+      <div class="pod-bar"></div>
+    </div>
+  `).join('');
+
+  document.getElementById('final-list').innerHTML = all.map((p,i)=>`
+    <div class="mini-lb-row ${p.id===playerId?'me':''}">
+      <span class="rank">${i+1}</span>
+      <span class="nm">${p.avatar||''} ${p.name}${p.id===playerId?' (คุณ)':''}</span>
+      <span class="sc">${p.score.toLocaleString()}</span>
+    </div>
+  `).join('');
+
+  const st = data.end.yourStats;
+  if(st){
+    document.getElementById('stat-grid').innerHTML = `
+      <div class="stat-box"><div class="lbl">🎯 ตอบถูก</div><div class="val">${st.correctCount} / ${st.total}</div></div>
+      <div class="stat-box"><div class="lbl">⚡ เวลาตอบเฉลี่ย</div><div class="val">${st.avgTime} วิ</div></div>
+      <div class="stat-box"><div class="lbl">🔥 Combo สูงสุด</div><div class="val">x${st.maxCombo}</div></div>
+      <div class="stat-box"><div class="lbl">🌌 หมวดที่เก่งสุด</div><div class="val" style="font-size:14px;">${st.bestCat}</div></div>
+    `;
+  }
+}
+
+function playAgain(){
+  ensureAudio(); sfxClick();
+  stopPolling();
+  const savedName = localStorage.getItem('cq_name') || '';
+  roomCode = null; playerId = null;
+  localStorage.removeItem('cq_room'); localStorage.removeItem('cq_player');
+  goTo('setup','create');
+  document.getElementById('player-name-input').value = savedName;
+}
+
+function leaveToHome(){
+  goTo('start');
+}
+
+/* ---------- resume session on page load / refresh ---------- */
+window.addEventListener('DOMContentLoaded', async ()=>{
+  const savedRoom = localStorage.getItem('cq_room');
+  const savedPlayer = localStorage.getItem('cq_player');
+  if(savedRoom && savedPlayer){
+    roomCode = savedRoom; playerId = savedPlayer;
+    try{
+      await api(`/api/rooms/${roomCode}/state?playerId=${playerId}`, 'GET');
+      startPolling();
+      startHeartbeat();
+    }catch(e){
+      localStorage.removeItem('cq_room'); localStorage.removeItem('cq_player');
+      goTo('start');
+    }
+    return;
+  }
+  const params = new URLSearchParams(location.search);
+  if(params.get('room')){
+    goTo('setup','join');
+  }
+});
+</script>
+</body>
+</html>
