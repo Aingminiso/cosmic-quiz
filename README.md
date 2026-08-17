@@ -119,15 +119,17 @@ labeled 🤖; anyone who ran out the clock without answering shows up as
 
 ## Question categories
 
-Questions are grouped under a top-level "topic". Two topics exist today:
-**🌌 ดาราศาสตร์ (Astronomy)** and **🧬 ชีววิทยา (Biology)**. In the lobby,
-the host sees a "🗂️ หมวดหมู่คำถาม" picker showing available topics as
-toggle chips — only the topics selected there are drawn from when the
-match starts (`GET /api/topics`, `POST /api/rooms/:code/topics`, filtered
-in `room.topics` on `server.js`). Adding a future topic is just: tag new
-`BANK` entries with `topic:'<key>'` and add a matching entry to the
-`TOPICS` array in `server.js` — the picker automatically becomes
-interactive, no other changes needed.
+Questions are grouped under a top-level "topic". Three topics exist today:
+**🌌 ดาราศาสตร์ (Astronomy)**, **🧬 ชีววิทยา (Biology)**, and
+**💻 วิศวะคอมพิวเตอร์ (Computer Engineering)**. In the lobby, the host sees
+a "🗂️ หมวดหมู่คำถาม" picker showing available topics as toggle chips — only
+the topics selected there are drawn from when the match starts
+(`GET /api/topics`, `POST /api/rooms/:code/topics`, filtered in
+`room.topics` on `server.js`). All topics are selected by default when a
+room is created — deselect the ones you don't want before starting.
+Adding a future topic is just: tag new `BANK` entries with `topic:'<key>'`
+and add a matching entry to the `TOPICS` array in `server.js` — the
+picker automatically becomes interactive, no other changes needed.
 
 ## Randomization
 
@@ -144,9 +146,10 @@ interactive, no other changes needed.
 - State is in-memory only — restarting the server (or a Render free-tier
   sleep/wake cycle) clears all rooms. Start rooms fresh right before playing.
 - Rooms with no human heartbeat for 30 minutes are automatically cleaned up.
-- Question bank has 132 questions across 2 topics (ดาราศาสตร์ 82, ชีววิทยา
-  50), each split into 5 sub-categories × 3 difficulties; each match
-  randomly samples up to 20 of them from the topic(s) selected in the lobby
+- Question bank has 182 questions across 3 topics (ดาราศาสตร์ 82,
+  ชีววิทยา 50, วิศวะคอมพิวเตอร์ 50), each split into 5 sub-categories × 3
+  difficulties; each match randomly samples up to 20 of them from the
+  topic(s) selected in the lobby
  (`MAX_QUESTIONS` in `server.js`).
 - To tweak timing, edit `QUESTION_TIME` / `REVEAL_TIME` in `server.js` — just
   make sure `QUESTION_TIME` still matches the `QUESTION_TIME` constant near

@@ -225,6 +225,68 @@ const BANK = [
   { topic:"biology", cat:"🧠 กายวิภาคและสรีรวิทยา", diff:"medium", text:"กระบวนการย่อยอาหารของมนุษย์เริ่มต้นที่อวัยวะใดเป็นส่วนแรก", options:["กระเพาะอาหาร","ปาก (ช่องปาก)","ลำไส้เล็ก","หลอดอาหาร"], correctIndex:1 },
   { topic:"biology", cat:"🧠 กายวิภาคและสรีรวิทยา", diff:"hard", text:"เอนไซม์ในน้ำลายที่ช่วยย่อยแป้งเรียกว่าอะไร", options:["เปปซิน","อะไมเลส","ไลเปส","ทริปซิน"], correctIndex:1 },
   { topic:"biology", cat:"🧠 กายวิภาคและสรีรวิทยา", diff:"hard", text:"หน่วยที่เล็กที่สุดของระบบประสาทที่ทำหน้าที่รับส่งสัญญาณเรียกว่าอะไร", options:["เซลล์ประสาท (Neuron)","เซลล์เม็ดเลือด","เซลล์กล้ามเนื้อ","เซลล์ผิวหนัง"], correctIndex:0 },
+
+  /* ===================== 💻 COMPUTER ENGINEERING TOPIC ===================== */
+
+  // ---- 💻 ฮาร์ดแวร์คอมพิวเตอร์ ----
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"easy", text:"CPU ย่อมาจากอะไร", options:["Central Processing Unit","Computer Processing Unit","Central Program Unit","Central Processor Utility"], correctIndex:0 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"easy", text:"อุปกรณ์ใดเป็นหน่วยความจำหลักที่ข้อมูลจะหายไปเมื่อปิดเครื่อง", options:["RAM","ROM","Hard Disk","SSD"], correctIndex:0 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"easy", text:"อุปกรณ์จัดเก็บข้อมูลชนิดใดที่ไม่มีจานหมุน และทำงานได้เร็วกว่า HDD", options:["RAM","SSD","CPU","GPU"], correctIndex:1 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"easy", text:"ความเร็วของ CPU มักวัดด้วยหน่วยใด", options:["ไบต์ (Byte)","เฮิรตซ์ (GHz)","วัตต์ (Watt)","บิตต่อวินาที (bps)"], correctIndex:1 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"medium", text:"GPU ทำหน้าที่หลักด้านใด", options:["ประมวลผลกราฟิกและงานคำนวณแบบขนาน","จัดเก็บข้อมูลถาวรแทนฮาร์ดดิสก์","แปลงไฟฟ้ากระแสสลับเป็นตรง","เชื่อมต่อ Wi-Fi"], correctIndex:0 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"medium", text:"มาเธอร์บอร์ด (Motherboard) ทำหน้าที่หลักคืออะไร", options:["จัดเก็บข้อมูลถาวร","เป็นแผงวงจรหลักเชื่อมต่ออุปกรณ์ทุกชิ้นเข้าด้วยกัน","แปลงไฟฟ้ากระแสสลับเป็นตรง","ระบายความร้อนให้ CPU"], correctIndex:1 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"medium", text:"บิต (bit) ซึ่งเป็นหน่วยข้อมูลที่เล็กที่สุด มีค่าที่เป็นไปได้กี่แบบ", options:["2 แบบ (0 กับ 1)","4 แบบ","8 แบบ","10 แบบ"], correctIndex:0 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"medium", text:"1 ไบต์ (Byte) เท่ากับกี่บิต", options:["4 บิต","8 บิต","16 บิต","32 บิต"], correctIndex:1 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"hard", text:"สถาปัตยกรรม CPU แบบใดที่เน้นชุดคำสั่งแบบง่ายจำนวนมาก มักใช้ในอุปกรณ์พกพา เช่น ARM", options:["CISC","RISC","x86","VLIW"], correctIndex:1 },
+  { topic:"comp_eng", cat:"💻 ฮาร์ดแวร์คอมพิวเตอร์", diff:"hard", text:"หน่วยความจำแคช (Cache) ในซีพียูมีไว้เพื่อจุดประสงค์ใด", options:["สำรองข้อมูลถาวรเมื่อไฟดับ","เก็บข้อมูลที่ใช้บ่อยไว้ใกล้ CPU เพื่อเข้าถึงได้เร็วขึ้น","แปลงสัญญาณดิจิทัลเป็นแอนะล็อก","ควบคุมความเร็วพัดลมระบายความร้อน"], correctIndex:1 },
+
+  // ---- 🔤 ภาษาโปรแกรม & ซอฟต์แวร์ ----
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"easy", text:"ภาษาโปรแกรมใดที่มักใช้สอนเขียนโปรแกรมเป็นภาษาแรกเพราะไวยากรณ์อ่านง่าย", options:["Assembly","Python","C++","Fortran"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"easy", text:"HTML ย่อมาจากอะไร", options:["HyperText Markup Language","High Text Machine Language","Home Tool Markup Language","HyperText Modern Language"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"easy", text:"โปรแกรมที่แปลงโค้ดต้นฉบับทั้งไฟล์เป็นภาษาเครื่องก่อนรันเรียกว่าอะไร", options:["คอมไพเลอร์ (Compiler)","อินเทอร์พรีเตอร์ (Interpreter)","เดบักเกอร์ (Debugger)","ลิงเกอร์ (Linker)"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"easy", text:"ระบบปฏิบัติการ (Operating System) ทำหน้าที่หลักคืออะไร", options:["จัดการทรัพยากรฮาร์ดแวร์และเป็นตัวกลางระหว่างผู้ใช้กับเครื่อง","แปลภาษาโปรแกรมเป็นภาษาเครื่องเท่านั้น","ผลิตไฟฟ้าให้คอมพิวเตอร์","เชื่อมต่ออินเทอร์เน็ตโดยตรง"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"medium", text:"ข้อผิดพลาดในโปรแกรมที่ทำให้ทำงานไม่ถูกต้องเรียกว่าอะไร", options:["บั๊ก (Bug)","แพตช์ (Patch)","ลูป (Loop)","แฟล็ก (Flag)"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"medium", text:"แนวคิดการเขียนโปรแกรมที่มองทุกอย่างเป็น 'อ็อบเจกต์' ที่มีคุณสมบัติและพฤติกรรมเรียกว่าอะไร", options:["Object-Oriented Programming","Operational Program","Open Programming","Ordered Process"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"medium", text:"ตัวแปร (Variable) ในการเขียนโปรแกรมคืออะไร", options:["คำสั่งที่ทำซ้ำ","ที่เก็บข้อมูลที่สามารถเปลี่ยนแปลงค่าได้","ชื่อไฟล์โปรแกรม","ข้อผิดพลาดของโค้ด"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"medium", text:"โครงสร้างข้อมูลแบบใดที่เข้าก่อนออกก่อน (First In First Out)", options:["สแตก (Stack)","คิว (Queue)","ทรี (Tree)","กราฟ (Graph)"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"hard", text:"โครงสร้างข้อมูลแบบใดที่เข้าหลังออกก่อน (Last In First Out)", options:["สแตก (Stack)","คิว (Queue)","ลิงก์ลิสต์ (Linked List)","ฮีป (Heap)"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔤 ภาษาโปรแกรม & ซอฟต์แวร์", diff:"hard", text:"Big O Notation ใช้อธิบายอะไรในการวิเคราะห์อัลกอริทึม", options:["ความสวยงามของโค้ด","ความซับซ้อนด้านเวลาหรือพื้นที่เมื่อขนาดข้อมูลเพิ่มขึ้น","จำนวนบรรทัดของโค้ด","เวอร์ชันของภาษาโปรแกรม"], correctIndex:1 },
+
+  // ---- 🌐 เครือข่ายและอินเทอร์เน็ต ----
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"easy", text:"IP Address ใช้เพื่อจุดประสงค์ใดในเครือข่ายคอมพิวเตอร์", options:["ระบุตัวตน/ที่อยู่ของอุปกรณ์บนเครือข่าย","เข้ารหัสไฟล์","จัดเก็บรหัสผ่าน","ตั้งชื่อโดเมน"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"easy", text:"WWW ย่อมาจากอะไร", options:["World Wide Web","World Web Wide","Wide World Web","Web World Wide"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"easy", text:"อุปกรณ์ใดใช้เชื่อมต่อเครือข่ายหลายวงเข้าด้วยกันและเลือกเส้นทางส่งข้อมูล", options:["สวิตช์ (Switch)","เราเตอร์ (Router)","โมเด็ม (Modem)","ฮับ (Hub)"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"easy", text:"Wi-Fi ใช้คลื่นชนิดใดในการรับส่งข้อมูล", options:["คลื่นเสียง","คลื่นวิทยุ","แสงเลเซอร์","รังสีเอกซ์"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"medium", text:"โปรโตคอลใดใช้สำหรับส่งอีเมลเป็นหลัก", options:["HTTP","FTP","SMTP","DNS"], correctIndex:2 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"medium", text:"DNS ทำหน้าที่หลักคืออะไร", options:["เข้ารหัสข้อมูล","แปลงชื่อโดเมนให้เป็น IP Address","ควบคุมความเร็วอินเทอร์เน็ต","ป้องกันไวรัส"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"medium", text:"HTTPS ต่างจาก HTTP ตรงจุดใดเป็นหลัก", options:["เร็วกว่าเสมอ","มีการเข้ารหัสข้อมูลระหว่างส่ง (SSL/TLS)","ใช้ได้เฉพาะบนมือถือ","ไม่ต้องใช้อินเทอร์เน็ต"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"medium", text:"โมเดล OSI แบ่งการสื่อสารเครือข่ายออกเป็นกี่ชั้น", options:["5 ชั้น","6 ชั้น","7 ชั้น","8 ชั้น"], correctIndex:2 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"hard", text:"โปรโตคอลใดรับผิดชอบการรับส่งข้อมูลแบบเชื่อถือได้ มีการตรวจสอบและส่งซ้ำหากข้อมูลสูญหาย", options:["UDP","TCP","ICMP","ARP"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🌐 เครือข่ายและอินเทอร์เน็ต", diff:"hard", text:"เทคนิคใดที่ใช้แปลง IP Address ภายในองค์กรให้เป็น IP Address สาธารณะก่อนออกอินเทอร์เน็ต", options:["DNS","NAT","VPN","DHCP"], correctIndex:1 },
+
+  // ---- 🗄️ ฐานข้อมูลและอัลกอริทึม ----
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"easy", text:"SQL ย่อมาจากอะไร", options:["Structured Query Language","Simple Query Logic","System Query Language","Structured Question Language"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"easy", text:"ฐานข้อมูลแบบใดที่จัดเก็บข้อมูลในรูปแบบตาราง แถว-คอลัมน์", options:["ฐานข้อมูลเชิงสัมพันธ์ (Relational)","ฐานข้อมูล NoSQL ทั้งหมด","ฐานข้อมูลกราฟเท่านั้น","ฐานข้อมูลไฟล์ข้อความ"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"easy", text:"คำสั่ง SQL ใดใช้สำหรับดึงข้อมูลจากตาราง", options:["SELECT","INSERT","DELETE","UPDATE"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"easy", text:"อัลกอริทึม (Algorithm) คืออะไร", options:["ขั้นตอนวิธีการแก้ปัญหาที่ชัดเจนเป็นลำดับ","ภาษาโปรแกรมชนิดหนึ่ง","ชื่อของฮาร์ดแวร์","ไวรัสคอมพิวเตอร์ชนิดหนึ่ง"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"medium", text:"การเรียงลำดับข้อมูลแบบใดที่เปรียบเทียบข้อมูลคู่ที่อยู่ติดกันแล้วสลับตำแหน่งไปเรื่อยๆ", options:["Bubble Sort","Binary Search","Hash Table","Linked List"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"medium", text:"การค้นหาแบบ Binary Search ต้องการให้ข้อมูลมีลักษณะอย่างไรก่อนค้นหา", options:["ไม่ต้องเรียงลำดับ","เรียงลำดับแล้ว","เป็นตัวเลขเท่านั้น","มีจำนวนคู่เท่านั้น"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"medium", text:"คีย์หลัก (Primary Key) ในฐานข้อมูลใช้เพื่อจุดประสงค์ใด", options:["จัดเรียงตารางตามตัวอักษร","ระบุแถวข้อมูลแต่ละแถวให้ไม่ซ้ำกัน","เข้ารหัสข้อมูลในตาราง","ลบข้อมูลอัตโนมัติ"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"medium", text:"โครงสร้างข้อมูลแบบต้นไม้ที่แต่ละโหนดมีลูกได้ไม่เกิน 2 โหนดเรียกว่าอะไร", options:["Linked List","Binary Tree","Hash Table","Queue"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"hard", text:"อัลกอริทึมเรียงลำดับใดใช้หลักการแบ่งแยกแล้วเอาชนะ (Divide and Conquer) และมีความซับซ้อนเฉลี่ย O(n log n)", options:["Bubble Sort","Quick Sort","Selection Sort","Insertion Sort"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🗄️ ฐานข้อมูลและอัลกอริทึม", diff:"hard", text:"ฐานข้อมูลแบบ NoSQL แตกต่างจากฐานข้อมูลเชิงสัมพันธ์อย่างไรเป็นหลัก", options:["ไม่ยึดโครงสร้างตารางตายตัว รองรับข้อมูลหลากหลายรูปแบบ","ใช้ภาษา SQL เท่านั้น","เก็บข้อมูลได้น้อยกว่าเสมอ","ทำงานได้เฉพาะบนคลาวด์"], correctIndex:0 },
+
+  // ---- 🔐 ความปลอดภัยไซเบอร์ ----
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"easy", text:"ซอฟต์แวร์ที่ออกแบบมาเพื่อสร้างความเสียหายหรือเข้าถึงระบบโดยไม่ได้รับอนุญาตเรียกรวมว่าอะไร", options:["มัลแวร์ (Malware)","ไฟร์วอลล์ (Firewall)","แพตช์ (Patch)","คุกกี้ (Cookie)"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"easy", text:"รหัสผ่านที่ปลอดภัยควรมีลักษณะอย่างไร", options:["สั้นและจำง่าย","ใช้ชื่อหรือวันเกิดตัวเอง","ยาว ผสมตัวอักษร ตัวเลข สัญลักษณ์ และคาดเดายาก","ใช้รหัสเดียวกันทุกเว็บไซต์"], correctIndex:2 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"easy", text:"อีเมลหลอกลวงที่แอบอ้างเป็นองค์กรน่าเชื่อถือเพื่อขโมยข้อมูลเรียกว่าอะไร", options:["ฟิชชิง (Phishing)","สแปม (Spam)","แบ็คอัพ (Backup)","แฮชแท็ก (Hashtag)"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"easy", text:"ไฟร์วอลล์ (Firewall) มีหน้าที่หลักคืออะไร", options:["เพิ่มความเร็วอินเทอร์เน็ต","กรองและควบคุมการเข้า-ออกของข้อมูลบนเครือข่าย","จัดเก็บรหัสผ่านให้อัตโนมัติ","แปลภาษาเว็บไซต์"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"medium", text:"การยืนยันตัวตนแบบ 2 ขั้นตอน (Two-Factor Authentication) ช่วยเพิ่มความปลอดภัยอย่างไร", options:["ต้องใช้ปัจจัยยืนยันตัวตนสองอย่างที่ต่างกันก่อนเข้าระบบ","ให้ใส่รหัสผ่านสองครั้งซ้ำกัน","ปิดการเข้าถึงอินเทอร์เน็ตชั่วคราว","เปลี่ยนรหัสผ่านทุกวันอัตโนมัติ"], correctIndex:0 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"medium", text:"มัลแวร์ชนิดใดที่เข้ารหัสไฟล์ของเหยื่อแล้วเรียกค่าไถ่เพื่อปลดล็อก", options:["Spyware","Ransomware","Adware","คุกกี้ (Cookie)"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"medium", text:"การเข้ารหัสข้อมูล (Encryption) มีจุดประสงค์หลักเพื่ออะไร", options:["ทำให้ไฟล์มีขนาดเล็กลง","แปลงข้อมูลให้อ่านไม่ออกหากไม่มีกุญแจถอดรหัส","เพิ่มความเร็วในการโอนไฟล์","ลบข้อมูลอัตโนมัติ"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"medium", text:"VPN ช่วยเรื่องความปลอดภัยอย่างไรเป็นหลัก", options:["เพิ่มพื้นที่จัดเก็บข้อมูล","สร้างการเชื่อมต่อที่เข้ารหัสและซ่อน IP จริงของผู้ใช้","ป้องกันไฟฟ้าดับ","ทำให้คอมพิวเตอร์เร็วขึ้น"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"hard", text:"การโจมตีแบบ DDoS มีเป้าหมายหลักเพื่ออะไร", options:["ขโมยรหัสผ่านโดยตรง","ทำให้เซิร์ฟเวอร์ล่มหรือใช้งานไม่ได้ด้วยการส่งคำขอจำนวนมหาศาลพร้อมกัน","เข้ารหัสไฟล์เพื่อเรียกค่าไถ่","แอบอ้างเป็นเว็บไซต์จริง"], correctIndex:1 },
+  { topic:"comp_eng", cat:"🔐 ความปลอดภัยไซเบอร์", diff:"hard", text:"ช่องโหว่ที่ยังไม่มีใครรู้จักและยังไม่มีแพตช์แก้ไข เรียกว่าอะไร", options:["Zero-day","Backdoor","Firewall Bypass","Brute Force"], correctIndex:0 },
 ];
 
 /* ============================= TOPICS ==================================== */
@@ -236,6 +298,7 @@ const BANK = [
 const TOPICS = [
   { key: 'astronomy', label: 'ดาราศาสตร์', emoji: '🌌' },
   { key: 'biology', label: 'ชีววิทยา', emoji: '🧬' },
+  { key: 'comp_eng', label: 'วิศวะคอมพิวเตอร์', emoji: '💻' },
 ];
 const TOPIC_KEYS = new Set(TOPICS.map(t => t.key));
 const DEFAULT_TOPICS = TOPICS.map(t => t.key);
