@@ -122,6 +122,17 @@ h1.logo{
 }
 .avatar-opt.sel{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(34,211,238,.25);}
 
+.topic-row{display:flex;gap:10px;flex-wrap:wrap;}
+.topic-chip{
+  display:flex;align-items:center;gap:6px;
+  background:var(--void-3);border:1px solid #2a3252;border-radius:999px;
+  padding:8px 14px;font-family:var(--font-body);font-size:13px;color:var(--text-2);
+  cursor:pointer;user-select:none;
+}
+.topic-chip .count{font-family:var(--font-mono);font-size:11px;color:var(--text-2);opacity:.7;}
+.topic-chip.sel{border-color:var(--cyan);color:var(--text-1);box-shadow:0 0 0 2px rgba(34,211,238,.25);}
+.topic-chip.locked{cursor:default;opacity:.85;}
+
 .room-badge{
   display:inline-flex;align-items:center;gap:10px;
   font-family:var(--font-mono);font-size:14px;letter-spacing:.08em;
@@ -398,6 +409,10 @@ h1.logo{
     </div>
     <h1 class="logo" style="font-size:30px;margin-bottom:10px;">🚀 LOBBY</h1>
     <div class="lan-url" id="lan-url-box" style="display:none;"></div>
+    <div class="card" id="topics-card" style="display:none;margin-bottom:16px;">
+      <div class="hint" style="margin-bottom:10px;">🗂️ หมวดหมู่คำถาม</div>
+      <div class="topic-row" id="topics-row"></div>
+    </div>
     <div class="card" id="lobby-player-list"></div>
     <div style="margin-top:20px;">
       <button class="btn btn-primary" id="ready-btn" onclick="toggleReady()">
@@ -723,12 +738,62 @@ function render(data){
   else if(data.phase === 'end') renderEndPhase(data);
 }
 
+/* ---------- topics (question category selection) ---------- */
+let availableTopics = null;   // [{key,label,emoji,count}] — fetched once, doesn't change at runtime
+let topicsFetching = null;
+let lastRenderedTopics = null; // last selected-topics array we drew chips for, to avoid re-render/flicker while typing
+
+async function ensureTopicsLoaded(){
+  if(availableTopics) return availableTopics;
+  if(!topicsFetching){
+    topicsFetching = api('/api/topics', 'GET').then(r => { availableTopics = r.topics; return availableTopics; }).catch(()=>{ topicsFetching = null; return null; });
+  }
+  return topicsFetching;
+}
+
+async function toggleTopic(key){
+  if(!availableTopics) return;
+  const selected = new Set(lastRenderedTopics || []);
+  if(selected.has(key)){
+    if(selected.size <= 1){ toast('ต้องเลือกอย่างน้อย 1 หมวดหมู่'); return; }
+    selected.delete(key);
+  } else {
+    selected.add(key);
+  }
+  try{
+    await api(`/api/rooms/${roomCode}/topics`, 'POST', { playerId, topics: [...selected] });
+    pollOnce();
+  }catch(e){ toast('เปลี่ยนหมวดหมู่ไม่สำเร็จ'); }
+}
+
+function renderTopicsBox(data){
+  const card = document.getElementById('topics-card');
+  const row = document.getElementById('topics-row');
+  const topics = data.topics || [];
+  const isHost = !!(data.you && data.you.isHost);
+
+  ensureTopicsLoaded().then(list => {
+    if(!list || list.length === 0){ card.style.display = 'none'; return; }
+    card.style.display = 'block';
+    lastRenderedTopics = topics;
+    const single = list.length === 1;
+    row.innerHTML = list.map(t => {
+      const sel = topics.includes(t.key);
+      const locked = single || !isHost; // nothing to pick between yet, or you're not the host
+      return `<div class="topic-chip ${sel?'sel':''} ${locked?'locked':''}" ${locked?'':`onclick="toggleTopic('${t.key}')"`}>
+        <span>${t.emoji} ${t.label}</span><span class="count">${t.count}</span>
+      </div>`;
+    }).join('');
+  });
+}
+
 /* ---------- lobby ---------- */
 function renderLobby(data){
   if(document.getElementById('screen-lobby').classList.contains('active') === false){
     goToScreenSilent('lobby');
   }
   document.getElementById('lobby-room-code').textContent = data.roomCode;
+  renderTopicsBox(data);
   const lanBox = document.getElementById('lan-url-box');
   if(data.you && data.you.isHost){
     lanBox.style.display = 'block';
